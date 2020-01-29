@@ -18,7 +18,7 @@ class AnalyticsHelper private constructor() {
     }
 
     fun setUserProperties() {
-        analytics.setUserId("1984tr")
+        analytics.setUserId("id_1984tr")
         analytics.setUserProperty("name", "1984tr")
     }
 
@@ -40,10 +40,12 @@ class AnalyticsHelper private constructor() {
             }
         }
         analytics.logEvent(name, bundle)
+        CrashlyticsHelper.log(name)
     }
 
     object Event {
         val START_APPLICATION = "start_application"
+        val CLICK_BTN_ANALYTICS = "click_btn_analytics"
     }
 
     object Param {
