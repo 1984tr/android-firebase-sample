@@ -26,4 +26,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/bt_analytics" />
 
+    <Button
+        android:id="@+id/bt_dynamic_link"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:onClick="onClickDynamicLink"
+        android:text="Dynamic Link"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bt_crashlytics" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

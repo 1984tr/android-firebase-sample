@@ -6,16 +6,19 @@ import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 
 object DynamicLinkHelper {
 
-    private val prefix = "https://1984tr.page.link"
-    private val pkgName = "com.tr1984.firebasesample"
+    private const val prefix = "https://1984tr.page.link"
+    private const val pkgName = "com.tr1984.firebasesample"
 
-    fun getDynamiLink(link: String, title: String = "", description: String = ""): Uri {
-        val dynamicLink = getBuilder(link, title, description).buildDynamicLink()
+    fun getDynamiLink(link: String): Uri {
+        val dynamicLink = getBuilder(link).buildDynamicLink()
         return dynamicLink.uri
     }
 
-    fun getShortDynamicLink(link: String, title: String = "", description: String = "", completion: (Uri?) -> Unit) {
-        getBuilder(link, title, description)
+    fun getShortDynamicLink(
+        link: String,
+        completion: (Uri?) -> Unit
+    ) {
+        getBuilder(link)
             .buildShortDynamicLink()
             .addOnSuccessListener { result ->
                 completion.invoke(result.shortLink)
@@ -25,11 +28,9 @@ object DynamicLinkHelper {
     }
 
     private fun getBuilder(
-        link: String,
-        title: String = "",
-        description: String = ""
+        link: String
     ): DynamicLink.Builder {
-        val builder = FirebaseDynamicLinks.getInstance().createDynamicLink()
+        return FirebaseDynamicLinks.getInstance().createDynamicLink()
             .setLink(Uri.parse(link))
             .setDomainUriPrefix(prefix)
             .setAndroidParameters(
@@ -39,30 +40,9 @@ object DynamicLinkHelper {
             )
             .setIosParameters(
                 DynamicLink.IosParameters.Builder(pkgName)
-                    .setAppStoreId("1234")
-                    .setMinimumVersion("1.0.0")
+                    .setAppStoreId("111111")
+                    .setMinimumVersion("0.0.1")
                     .build()
             )
-            .setGoogleAnalyticsParameters(
-                DynamicLink.GoogleAnalyticsParameters.Builder()
-                    .setSource("orkut")
-                    .setMedium("social")
-                    .setCampaign("example-promo")
-                    .build()
-            )
-            .setItunesConnectAnalyticsParameters(
-                DynamicLink.ItunesConnectAnalyticsParameters.Builder()
-                    .setProviderToken("123456")
-                    .setCampaignToken("example-promo")
-                    .build()
-            )
-        if (title.isNotEmpty()) {
-            builder.setSocialMetaTagParameters(
-                DynamicLink.SocialMetaTagParameters.Builder()
-                    .setTitle(title)
-                    .setDescription(description)
-                    .build()
-            )
-        }
     }
 }
