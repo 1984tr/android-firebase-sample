@@ -9,7 +9,7 @@ object DynamicLinkHelper {
     private const val prefix = "https://1984tr.page.link"
     private const val pkgName = "com.tr1984.firebasesample"
 
-    fun getDynamiLink(link: String): Uri {
+    fun getDynamicLink(link: String): Uri {
         val dynamicLink = getBuilder(link).buildDynamicLink()
         return dynamicLink.uri
     }
@@ -23,6 +23,7 @@ object DynamicLinkHelper {
             .addOnSuccessListener { result ->
                 completion.invoke(result.shortLink)
             }.addOnFailureListener {
+                it.printStackTrace()
                 completion.invoke(null)
             }
     }
