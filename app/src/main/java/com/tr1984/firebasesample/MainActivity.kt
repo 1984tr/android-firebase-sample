@@ -52,6 +52,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onClickAuthentification(v: View) {
-        
+
     }
 }
