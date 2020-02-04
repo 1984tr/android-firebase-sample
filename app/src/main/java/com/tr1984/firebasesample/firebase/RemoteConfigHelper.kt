@@ -50,11 +50,25 @@ class RemoteConfigHelper private constructor() {
     }
 
     enum class Key {
+
+        INITIAL_MAP_POINT,
+        POI_MAIN_TITLE,
+        CONTACT,
+        DATA_SOURCE,
+        LAST_UPDATED_AT,
+        MAIN_TITLE,
         MINIMUM_VERSION;
 
         companion object {
             fun defaults(): HashMap<String, Any> {
-                return hashMapOf("MINIMUM_VERSION" to "0.0.1")
+                return hashMapOf(
+                    "INITIAL_MAP_POINT" to "{\"latitude\":37.37478492230988,\"longitude\":126.72695961530327}",
+                    "POI_MAIN_TITLE" to "좌표",
+                    "CONTACT" to "Contact : jollytris@gmail.com",
+                    "DATA_SOURCE" to "출처 : -",
+                    "MAIN_TITLE" to "맵맵맵",
+                    "MINIMUM_VERSION" to "0.0.1"
+                )
             }
         }
     }
