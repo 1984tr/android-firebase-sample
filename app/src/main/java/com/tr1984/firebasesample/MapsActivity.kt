@@ -9,6 +9,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.tr1984.firebasesample.extensions.disposeBag
+import com.tr1984.firebasesample.firebase.FirestoreHelper
 import com.tr1984.firebasesample.firebase.RemoteConfigHelper
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
@@ -34,6 +35,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        FirestoreHelper.instance.getMaps()
     }
 
     override fun onDestroy() {
