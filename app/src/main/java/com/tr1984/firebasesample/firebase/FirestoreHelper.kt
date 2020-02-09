@@ -2,6 +2,7 @@ package com.tr1984.firebasesample.firebase
 
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.tr1984.firebasesample.data.Map
 import com.tr1984.firebasesample.data.Poi
 
 class FirestoreHelper private constructor() {
@@ -10,30 +11,37 @@ class FirestoreHelper private constructor() {
         FirebaseFirestore.getInstance()
     }
 
+    private val map = Map()
+
     // maps/0/pois/0
-    fun getMaps() {
+    fun loadData(completion: (isSuccess: Boolean) -> Unit) {
         fireestore.collection("maps")
             .get()
             .addOnSuccessListener { maps ->
                 maps.documents.forEach {
-                    getPois(it)
+                    getSubCollections(it, completion)
                 }
             }
             .addOnFailureListener {
                 it.printStackTrace()
+                completion.invoke(false)
             }
     }
 
-    fun getPois(snapshot: DocumentSnapshot) {
+    private fun getSubCollections(snapshot: DocumentSnapshot, completion: (isSuccess: Boolean) -> Unit) {
         snapshot.reference.collection("pois")
             .get()
             .addOnSuccessListener {
-                it.documents.forEach {
-                    val poi = it.toObject(Poi::class.java)
+                it.documents.mapIndexed { index, documentSnapshot ->
+                    val poi = documentSnapshot.toObject(Poi::class.java)
+                    if (index == it.documents.size) {
+                        completion.invoke(true)
+                    }
                 }
             }
             .addOnFailureListener {
                 it.printStackTrace()
+                completion.invoke(false)
             }
     }
 
