@@ -2,10 +2,18 @@ package com.tr1984.firebasesample.service
 
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessagingService
+import com.google.firebase.messaging.RemoteMessage
 
 class MapFirebaseMessagingService : FirebaseMessagingService() {
 
 
+    override fun onNewToken(token: String) {
+        super.onNewToken(token)
+    }
+
+    override fun onMessageReceived(remoteMessage: RemoteMessage) {
+        super.onMessageReceived(remoteMessage)
+    }
 
     fun test() {
         FirebaseInstanceId.getInstance().instanceId
