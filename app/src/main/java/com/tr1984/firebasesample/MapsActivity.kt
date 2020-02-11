@@ -10,6 +10,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.tr1984.firebasesample.extensions.disposeBag
 import com.tr1984.firebasesample.firebase.FirestoreHelper
+import com.tr1984.firebasesample.firebase.MapFirebaseMessagingService
 import com.tr1984.firebasesample.firebase.RemoteConfigHelper
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
@@ -38,6 +39,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         FirestoreHelper.instance.loadData {
 
+        }
+
+        MapFirebaseMessagingService.getInstanceId {
+            // TODO add realtimedb with auth
         }
     }
 

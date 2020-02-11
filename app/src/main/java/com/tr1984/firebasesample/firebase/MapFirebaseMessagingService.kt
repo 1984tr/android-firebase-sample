@@ -22,10 +22,20 @@ class MapFirebaseMessagingService : FirebaseMessagingService() {
         }
     }
 
-    fun test() {
-        FirebaseInstanceId.getInstance().instanceId
-            .addOnCompleteListener {
-                
-            }
+    companion object {
+
+        fun getInstanceId(completion: (String?) -> Unit) {
+            FirebaseInstanceId.getInstance().instanceId
+                .addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        val token = it.result?.token
+                        Logger.d("getInstanceId success: $token")
+                        completion.invoke(token)
+                    } else {
+                        Logger.w("getInstanceId failed: ${it.exception}")
+                        completion.invoke(null)
+                    }
+                }
+        }
     }
 }
