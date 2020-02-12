@@ -1,21 +1,18 @@
-package com.tr1984.firebasesample
+package com.tr1984.firebasesample.ui
 
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.tr1984.firebasesample.extensions.disposeBag
-import com.tr1984.firebasesample.firebase.FirestoreHelper
-import com.tr1984.firebasesample.firebase.MapFirebaseMessagingService
+import com.tr1984.firebasesample.R
+import com.tr1984.firebasesample.firebase.AnalyticsHelper
 import com.tr1984.firebasesample.firebase.RemoteConfigHelper
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
+class MapsActivity : AppCompatActivity() {
 
     private lateinit var googleMap: GoogleMap
     private var compositeDisposable = CompositeDisposable()
@@ -23,43 +20,33 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AnalyticsHelper.instance.trackScreen(this)
+
         setContentView(R.layout.activity_maps)
 
-        readySubject.buffer(2)
-            .subscribe {
-                ready()
-            }.disposeBag(compositeDisposable)
-
-        RemoteConfigHelper.instance.fetchAndActivate {
-            readySubject.onNext(Unit)
-        }
-
-        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
-
-        FirestoreHelper.instance.loadData {
-
-        }
-
-        MapFirebaseMessagingService.getInstanceId {
-            // TODO add realtimedb with auth
-        }
+//        readySubject.buffer(2)
+//            .subscribe {
+//                ready()
+//            }.disposeBag(compositeDisposable)
+//
+//
+//
+//        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+//        mapFragment.getMapAsync { googleMap ->
+//            this@MapsActivity.googleMap = googleMap
+//            readySubject.onNext(Unit)
+//
+//            //        samplePoi.forEach {
+//            //            val latlng = LatLng(it.lat, it.lng)
+//            //            mMap.addMarker(MarkerOptions().position(latlng).title(it.title))
+//            //            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, 9f))
+//            //        }
+//        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         compositeDisposable.clear()
-    }
-
-    override fun onMapReady(googleMap: GoogleMap) {
-        this.googleMap = googleMap
-        readySubject.onNext(Unit)
-
-//        samplePoi.forEach {
-//            val latlng = LatLng(it.lat, it.lng)
-//            mMap.addMarker(MarkerOptions().position(latlng).title(it.title))
-//            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, 9f))
-//        }
     }
 
     private fun ready() {
@@ -75,8 +62,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             val longitude = initialMapPoint["longitude"] as Double
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(latitude, longitude), 9f))
 
-            Log.d("trtr", "title: $title, dataSource: $dataSource, lastUpdatedAt: $lastUpdatedAt, " +
-                    "contact: $contact, poiMainTitle: $poiMainTitle, latitude: $latitude, longitude: $longitude")
+            Log.d(
+                "trtr", "title: $title, dataSource: $dataSource, lastUpdatedAt: $lastUpdatedAt, " +
+                        "contact: $contact, poiMainTitle: $poiMainTitle, latitude: $latitude, longitude: $longitude"
+            )
         }
     }
 
