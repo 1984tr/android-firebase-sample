@@ -5,11 +5,25 @@
 
     <data>
 
+        <variable
+            name="viewModel"
+            type="com.tr1984.firebasesample.ui.MapsViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <fragment
+            android:id="@+id/map"
+            app:navermap_latitude="37.37478492230988"
+            app:navermap_longitude="126.72695961530327"
+            app:navermap_zoom="6"
+            app:navermap_mapType="Basic"
+            android:name="com.naver.maps.map.MapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
         <TextView
             android:id="@+id/txt_title"

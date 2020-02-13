@@ -6,6 +6,7 @@ apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 28
+
     defaultConfig {
         applicationId "com.tr1984.firebasesample"
         minSdkVersion 21
@@ -14,11 +15,16 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+
+    dataBinding {
+        enabled true
     }
 }
 
@@ -45,8 +51,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore:21.4.0'
     implementation 'com.google.firebase:firebase-messaging:20.1.0'
 
-    implementation 'com.google.android.gms:play-services-maps:17.0.0'
-
     implementation "androidx.preference:preference:1.1.0"
     implementation "androidx.preference:preference-ktx:1.1.0"
+
+    implementation 'com.naver.maps:map-sdk:3.7.0'
 }

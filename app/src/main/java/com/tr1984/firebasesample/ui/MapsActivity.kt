@@ -3,26 +3,47 @@ package com.tr1984.firebasesample.ui
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.LatLng
+import com.naver.maps.map.MapFragment
+import com.naver.maps.map.NaverMap
 import com.tr1984.firebasesample.R
+import com.tr1984.firebasesample.databinding.ActivityMapsBinding
+import com.tr1984.firebasesample.extensions.disposeBag
+import com.tr1984.firebasesample.extensions.uiSubscribe
 import com.tr1984.firebasesample.firebase.AnalyticsHelper
 import com.tr1984.firebasesample.firebase.RemoteConfigHelper
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.subjects.PublishSubject
 
 class MapsActivity : AppCompatActivity() {
 
-    private lateinit var googleMap: GoogleMap
+    private lateinit var binding: ActivityMapsBinding
+    private lateinit var viewModel: MapsViewModel
+    private var naverMap: NaverMap? = null
+
     private var compositeDisposable = CompositeDisposable()
-    private var readySubject = PublishSubject.create<Unit>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AnalyticsHelper.instance.trackScreen(this)
 
-        setContentView(R.layout.activity_maps)
+        viewModel = MapsViewModel()
+        subscribes(viewModel)
+
+        binding = ActivityMapsBinding.inflate(layoutInflater)
+        binding.viewModel = viewModel
+        setContentView(binding.root)
+
+        val fm = supportFragmentManager
+        val mapFragment = fm.findFragmentById(R.id.map) as MapFragment?
+            ?: MapFragment.newInstance().also {
+                fm.beginTransaction().add(R.id.map, it).commit()
+            }
+        mapFragment.getMapAsync(viewModel.mapReadyCallback)
+
+
+        mapFragment.getMapAsync { naverMap ->
+            this.naverMap = naverMap
+            settingMap()
+        }
 
 //        readySubject.buffer(2)
 //            .subscribe {
@@ -49,6 +70,22 @@ class MapsActivity : AppCompatActivity() {
         compositeDisposable.clear()
     }
 
+    private fun subscribes(viewModel: MapsViewModel) {
+        viewModel.readySubject
+            .buffer(2)
+            .uiSubscribe({
+
+            }, {
+
+            }).disposeBag(compositeDisposable)
+    }
+
+    private fun settingMap() {
+        naverMap?.uiSettings?.run {
+            isZoomControlEnabled = false
+        }
+    }
+
     private fun ready() {
         RemoteConfigHelper.instance.run {
             val title = getString(RemoteConfigHelper.Key.MAIN_TITLE)
@@ -60,7 +97,7 @@ class MapsActivity : AppCompatActivity() {
             val initialMapPoint = get(RemoteConfigHelper.Key.INITIAL_MAP_POINT, HashMap::class.java)
             val latitude = initialMapPoint["latitude"] as Double
             val longitude = initialMapPoint["longitude"] as Double
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(latitude, longitude), 9f))
+//            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(latitude, longitude), 9f))
 
             Log.d(
                 "trtr", "title: $title, dataSource: $dataSource, lastUpdatedAt: $lastUpdatedAt, " +

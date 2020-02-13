@@ -1,6 +1,7 @@
 package com.tr1984.firebasesample.ui
 
 import androidx.lifecycle.ViewModel
+import com.naver.maps.map.NaverMap
 import com.tr1984.firebasesample.firebase.FirestoreHelper
 import com.tr1984.firebasesample.firebase.MapFirebaseMessagingService
 import com.tr1984.firebasesample.firebase.RemoteConfigHelper
@@ -10,6 +11,9 @@ import io.reactivex.subjects.PublishSubject
 class MapsViewModel : ViewModel() {
 
     val readySubject = PublishSubject.create<Unit>()
+    var mapReadyCallback = { naverMap: NaverMap ->
+
+    }
 
     private var compositeDisposable = CompositeDisposable()
 
