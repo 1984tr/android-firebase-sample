@@ -16,3 +16,5 @@
 /captures
 .externalNativeBuild
 .cxx
+app/src/debug/res/values/naver_map_apis.xml
+app/src/release/res/values/naver_map_apis.xml
