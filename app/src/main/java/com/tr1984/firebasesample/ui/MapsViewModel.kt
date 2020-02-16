@@ -1,8 +1,10 @@
 package com.tr1984.firebasesample.ui
 
+import android.graphics.Color
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
 import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.overlay.CircleOverlay
 import com.tr1984.firebasesample.firebase.FirestoreHelper
 import com.tr1984.firebasesample.firebase.MapFirebaseMessagingService
 import com.tr1984.firebasesample.firebase.RemoteConfigHelper
@@ -13,6 +15,7 @@ import io.reactivex.subjects.PublishSubject
 class MapsViewModel : ViewModel() {
 
     var positionSubject = PublishSubject.create<LatLng>()
+    var circleDrawSubject = PublishSubject.create<CircleOverlay>()
     var title = ObservableField("")
     var dataSource = ObservableField("")
     var lastUpdatedAt = ObservableField("")
@@ -26,7 +29,7 @@ class MapsViewModel : ViewModel() {
         compositeDisposable.clear()
     }
 
-    fun getConfiguration() : Observable<Unit> {
+    fun getConfiguration(): Observable<Unit> {
         return Observable.create<Unit> { emit ->
             RemoteConfigHelper.instance.fetchAndActivate {
                 emit.onNext(Unit)
@@ -47,7 +50,11 @@ class MapsViewModel : ViewModel() {
             val latitude = initialMapPoint["latitude"] as Double
             val longitude = initialMapPoint["longitude"] as Double
             positionSubject.onNext(LatLng(latitude, longitude))
+
+            circleDrawSubject.onNext(getCircleOverlay(LatLng(latitude, longitude), Color.RED))
         }
+        loadData()
+        checkFcmId()
     }
 
     private fun loadData() {
@@ -59,6 +66,16 @@ class MapsViewModel : ViewModel() {
     private fun checkFcmId() {
         MapFirebaseMessagingService.getInstanceId {
             // TODO add realtimedb with auth
+        }
+    }
+
+    private fun getCircleOverlay(latLng: LatLng, color: Int): CircleOverlay {
+        return CircleOverlay().apply {
+            this.center = latLng
+            this.radius = 20.0 // m
+            this.color = color
+            this.outlineWidth = 2 // px
+            this.outlineColor = Color.BLACK
         }
     }
 }

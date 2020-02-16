@@ -2,6 +2,7 @@ package com.tr1984.firebasesample.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.tr1984.firebasesample.R
@@ -27,6 +28,7 @@ class MapsActivity : AppCompatActivity() {
         AnalyticsHelper.instance.trackScreen(this)
 
         viewModel = MapsViewModel()
+        subscribeViewModel()
 
         binding = ActivityMapsBinding.inflate(layoutInflater)
         binding.viewModel = viewModel
@@ -70,5 +72,26 @@ class MapsActivity : AppCompatActivity() {
         naverMap?.uiSettings?.run {
             isZoomControlEnabled = false
         }
+    }
+
+    private fun subscribeViewModel() {
+        viewModel.run {
+            positionSubject
+                .uiSubscribe({
+                    naverMap?.moveCamera(CameraUpdate.scrollTo(it))
+                }, {
+                    it.printStackTrace()
+                }).disposeBag(compositeDisposable)
+            circleDrawSubject
+                .uiSubscribe({
+                    it.map = naverMap
+                }, {
+                    it.printStackTrace()
+                }).disposeBag(compositeDisposable)
+        }
+    }
+
+    private fun drawCircle() {
+
     }
 }

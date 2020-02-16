@@ -7,7 +7,7 @@ import com.tr1984.firebasesample.data.Poi
 
 class FirestoreHelper private constructor() {
 
-    private val fireestore by lazy {
+    private val firestore by lazy {
         FirebaseFirestore.getInstance()
     }
 
@@ -15,7 +15,7 @@ class FirestoreHelper private constructor() {
 
     // maps/0/pois/0
     fun loadData(completion: (isSuccess: Boolean) -> Unit) {
-        fireestore.collection("maps")
+        firestore.collection("maps")
             .get()
             .addOnSuccessListener { maps ->
                 maps.documents.forEach {
