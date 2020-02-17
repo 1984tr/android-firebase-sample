@@ -5,9 +5,12 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.overlay.CircleOverlay
+import com.tr1984.firebasesample.extensions.disposeBag
+import com.tr1984.firebasesample.extensions.uiSubscribe
 import com.tr1984.firebasesample.firebase.FirestoreHelper
 import com.tr1984.firebasesample.firebase.MapFirebaseMessagingService
 import com.tr1984.firebasesample.firebase.RemoteConfigHelper
+import com.tr1984.firebasesample.util.Logger
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
@@ -58,9 +61,17 @@ class MapsViewModel : ViewModel() {
     }
 
     private fun loadData() {
-        FirestoreHelper.instance.loadData {
+        // TODO 전체 만들기
+        // memory cache
+        FirestoreHelper.instance.getPois()
+            .uiSubscribe({
+                Logger.d("${it}")
+                // draw circles
+                // draw popup
+                // add child to list
+            }, {
 
-        }
+            }).disposeBag(compositeDisposable)
     }
 
     private fun checkFcmId() {

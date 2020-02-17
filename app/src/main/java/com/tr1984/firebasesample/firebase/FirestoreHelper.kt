@@ -2,8 +2,11 @@ package com.tr1984.firebasesample.firebase
 
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
-import com.tr1984.firebasesample.data.Map
+import com.google.firebase.firestore.QuerySnapshot
 import com.tr1984.firebasesample.data.Poi
+import com.tr1984.firebasesample.data.Pois
+import io.reactivex.Observable
+import io.reactivex.Single
 
 class FirestoreHelper private constructor() {
 
@@ -11,38 +14,44 @@ class FirestoreHelper private constructor() {
         FirebaseFirestore.getInstance()
     }
 
-    private val map = Map()
-
     // maps/0/pois/0
-    fun loadData(completion: (isSuccess: Boolean) -> Unit) {
-        firestore.collection("maps")
-            .get()
-            .addOnSuccessListener { maps ->
-                maps.documents.forEach {
-                    getSubCollections(it, completion)
-                }
-            }
-            .addOnFailureListener {
-                it.printStackTrace()
-                completion.invoke(false)
-            }
+    fun getPois() : Single<List<Pois>> {
+        return getMap()
+            .flatMapObservable { Observable.fromIterable(it.documents) }
+            .flatMapSingle { getPois(it) }
+            .toList()
     }
 
-    private fun getSubCollections(snapshot: DocumentSnapshot, completion: (isSuccess: Boolean) -> Unit) {
-        snapshot.reference.collection("pois")
-            .get()
-            .addOnSuccessListener {
-                it.documents.mapIndexed { index, documentSnapshot ->
-                    val poi = documentSnapshot.toObject(Poi::class.java)
-                    if (index == it.documents.size) {
-                        completion.invoke(true)
-                    }
+    private fun getMap() : Single<QuerySnapshot> {
+        return Single.create { emit ->
+            firestore.collection("maps")
+                .get()
+                .addOnSuccessListener {
+                    emit.onSuccess(it)
                 }
-            }
-            .addOnFailureListener {
-                it.printStackTrace()
-                completion.invoke(false)
-            }
+                .addOnFailureListener {
+                    it.printStackTrace()
+                    emit.onError(it)
+                }
+        }
+    }
+
+    private fun getPois(snapshot: DocumentSnapshot) : Single<Pois> {
+        return Single.create { emit ->
+            val pois = snapshot.toObject(Pois::class.java) ?: Pois()
+            snapshot.reference.collection("pois")
+                .get()
+                .addOnSuccessListener { result ->
+                    pois.items.addAll(result.documents.map {
+                        it.toObject(Poi::class.java) ?: Poi()
+                    })
+                    emit.onSuccess(pois)
+                }
+                .addOnFailureListener {
+                    it.printStackTrace()
+                    emit.onError(it)
+                }
+        }
     }
 
     companion object {
