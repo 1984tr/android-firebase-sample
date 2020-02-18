@@ -5,6 +5,7 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.overlay.CircleOverlay
+import com.naver.maps.map.overlay.InfoWindow
 import com.tr1984.firebasesample.extensions.disposeBag
 import com.tr1984.firebasesample.extensions.uiSubscribe
 import com.tr1984.firebasesample.firebase.FirestoreHelper
@@ -19,6 +20,7 @@ class MapsViewModel : ViewModel() {
 
     var positionSubject = PublishSubject.create<LatLng>()
     var circleDrawSubject = PublishSubject.create<CircleOverlay>()
+    var infoWindowSubject = PublishSubject.create<Pair<String, InfoWindow>>()
     var title = ObservableField("")
     var dataSource = ObservableField("")
     var lastUpdatedAt = ObservableField("")
@@ -65,7 +67,14 @@ class MapsViewModel : ViewModel() {
         // memory cache
         FirestoreHelper.instance.getPois()
             .uiSubscribe({
-                Logger.d("${it}")
+                Logger.d("$it")
+                for (pois in it) {
+                    for (poi in pois.items) {
+                        circleDrawSubject.onNext(poi.circleOverlay)
+                        infoWindowSubject.onNext(poi.getMessage() to poi.infoWindow)
+                    }
+                }
+
                 // draw circles
                 // draw popup
                 // add child to list
