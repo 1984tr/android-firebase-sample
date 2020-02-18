@@ -19,6 +19,7 @@ class MapsViewModel : ViewModel() {
 
     var positionSubject = PublishSubject.create<LatLng>()
     var circleDrawSubject = PublishSubject.create<CircleOverlay>()
+    var infoWindowSubject = PublishSubject.create<Pair<String, LatLng>>()
     var title = ObservableField("")
     var dataSource = ObservableField("")
     var lastUpdatedAt = ObservableField("")

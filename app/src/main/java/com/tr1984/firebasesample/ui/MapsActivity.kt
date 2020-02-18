@@ -2,9 +2,11 @@ package com.tr1984.firebasesample.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
+import com.naver.maps.map.overlay.InfoWindow
 import com.tr1984.firebasesample.R
 import com.tr1984.firebasesample.databinding.ActivityMapsBinding
 import com.tr1984.firebasesample.extensions.alert
@@ -93,5 +95,19 @@ class MapsActivity : AppCompatActivity() {
 
     private fun drawCircle() {
 
+    }
+
+    private fun openInfoWindow(text: String, pos: LatLng) {
+        naverMap?.let { map ->
+            val infoWindow = InfoWindow().apply {
+                adapter = object : InfoWindow.DefaultTextAdapter(this@MapsActivity) {
+                    override fun getText(infoWindow: InfoWindow): CharSequence {
+                        return text
+                    }
+                }
+                position = pos
+            }
+            infoWindow.open(map)
+        }
     }
 }
