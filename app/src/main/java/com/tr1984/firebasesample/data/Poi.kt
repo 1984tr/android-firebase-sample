@@ -21,7 +21,7 @@ data class Poi(
             this.outlineColor = Color.parseColor(this@Poi.color ?: "#ff0000")
         }
     }
-    
+
     val infoWindow by lazy {
         InfoWindow().apply {
             position = LatLng(point.latitude, point.longitude)

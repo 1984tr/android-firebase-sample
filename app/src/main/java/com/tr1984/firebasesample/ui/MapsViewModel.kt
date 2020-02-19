@@ -1,11 +1,13 @@
 package com.tr1984.firebasesample.ui
 
 import android.graphics.Color
+import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.overlay.CircleOverlay
 import com.naver.maps.map.overlay.InfoWindow
+import com.tr1984.firebasesample.data.Pois
 import com.tr1984.firebasesample.extensions.disposeBag
 import com.tr1984.firebasesample.extensions.uiSubscribe
 import com.tr1984.firebasesample.firebase.FirestoreHelper
@@ -20,16 +22,13 @@ class MapsViewModel : ViewModel() {
 
     var positionSubject = PublishSubject.create<LatLng>()
     var circleDrawSubject = PublishSubject.create<CircleOverlay>()
-<<<<<<< HEAD
     var infoWindowSubject = PublishSubject.create<Pair<String, InfoWindow>>()
-=======
-    var infoWindowSubject = PublishSubject.create<Pair<String, LatLng>>()
->>>>>>> 3ab4406d2f80a583251ced4a0fce9b083a0affef
     var title = ObservableField("")
     var dataSource = ObservableField("")
     var lastUpdatedAt = ObservableField("")
     var contact = ObservableField("")
     var poiMainTitle = ObservableField("")
+    var poiGroups = ObservableArrayList<Pois>()
 
     private var compositeDisposable = CompositeDisposable()
 
