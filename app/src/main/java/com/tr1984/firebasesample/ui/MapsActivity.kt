@@ -1,7 +1,10 @@
 package com.tr1984.firebasesample.ui
 
 import android.os.Bundle
+import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.MapFragment
@@ -36,6 +39,8 @@ class MapsActivity : AppCompatActivity() {
         binding.viewModel = viewModel
         setContentView(binding.root)
 
+        setupDrawer()
+
         Observable.combineLatest(
             getMap(),
             viewModel.getConfiguration(),
@@ -54,6 +59,14 @@ class MapsActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         compositeDisposable.clear()
+    }
+
+    override fun onBackPressed() {
+        if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
+        } else {
+            super.onBackPressed()
+        }
     }
 
     private fun getMap(): Observable<NaverMap> {
@@ -101,6 +114,21 @@ class MapsActivity : AppCompatActivity() {
                 }, {
                     it.printStackTrace()
                 }).disposeBag(compositeDisposable)
+        }
+    }
+
+    private fun setupDrawer() {
+        binding.drawerLayout.closeDrawer(GravityCompat.START)
+        binding.navView.getHeaderView(0).run {
+            val textView = findViewById<TextView>(R.id.txt_number_label)
+            textView.text = "text"
+        }
+        binding.txtVersion.text = "VER 1.0.0"
+    }
+
+    fun showDrawer(v: View) {
+        if (!binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            binding.drawerLayout.openDrawer(GravityCompat.START)
         }
     }
 
