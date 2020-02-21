@@ -196,6 +196,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:gravity="center"
                 android:textSize="12sp"
+                android:text="마지막 업데이"
                 tools:text="VER 1.0.0" />
         </com.google.android.material.navigation.NavigationView>
 

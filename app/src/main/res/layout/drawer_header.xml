@@ -10,14 +10,34 @@
         android:layout_height="match_parent">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/txt_number_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="40dp"
-            android:text="test"
-            app:layout_constraintLeft_toLeftOf="parent"
+            android:id="@+id/drawer_title"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:text="TITLE"
+            android:textColor="@android:color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/lbl_source"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:text="출처"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/drawer_title" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/lbl_contact"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:text="CONTACT"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lbl_source" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

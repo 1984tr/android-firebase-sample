@@ -120,7 +120,7 @@ class MapsActivity : AppCompatActivity() {
     private fun setupDrawer() {
         binding.drawerLayout.closeDrawer(GravityCompat.START)
         binding.navView.getHeaderView(0).run {
-            val textView = findViewById<TextView>(R.id.txt_number_label)
+            val textView = findViewById<TextView>(R.id.drawer_title)
             textView.text = "text"
         }
         binding.txtVersion.text = "VER 1.0.0"
