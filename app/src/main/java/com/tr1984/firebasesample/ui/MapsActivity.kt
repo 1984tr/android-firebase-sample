@@ -16,6 +16,7 @@ import com.tr1984.firebasesample.extensions.alert
 import com.tr1984.firebasesample.extensions.disposeBag
 import com.tr1984.firebasesample.extensions.uiSubscribe
 import com.tr1984.firebasesample.firebase.AnalyticsHelper
+import com.tr1984.firebasesample.firebase.RemoteConfigHelper
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
@@ -39,8 +40,6 @@ class MapsActivity : AppCompatActivity() {
         binding.viewModel = viewModel
         setContentView(binding.root)
 
-        setupDrawer()
-
         Observable.combineLatest(
             getMap(),
             viewModel.getConfiguration(),
@@ -51,6 +50,7 @@ class MapsActivity : AppCompatActivity() {
                 this.naverMap = it
                 settingMap()
                 viewModel.start()
+                setupDrawer()
             }, {
                 this@MapsActivity.alert("알림", it.localizedMessage)
             }).disposeBag(compositeDisposable)
@@ -120,10 +120,18 @@ class MapsActivity : AppCompatActivity() {
     private fun setupDrawer() {
         binding.drawerLayout.closeDrawer(GravityCompat.START)
         binding.navView.getHeaderView(0).run {
-            val textView = findViewById<TextView>(R.id.drawer_title)
-            textView.text = "text"
+            val txtTitle = findViewById<TextView>(R.id.drawer_title)
+            txtTitle.text = RemoteConfigHelper.instance.getString(RemoteConfigHelper.Key.MAIN_TITLE)
+
+            val txtUpdated = findViewById<TextView>(R.id.drawer_updated)
+            txtUpdated.text = RemoteConfigHelper.instance.getString(RemoteConfigHelper.Key.LAST_UPDATED_AT)
+
+            val txtSource = findViewById<TextView>(R.id.drawer_source)
+            txtSource.text = RemoteConfigHelper.instance.getString(RemoteConfigHelper.Key.DATA_SOURCE)
+
+            val txtContact = findViewById<TextView>(R.id.drawer_contact)
+            txtContact.text = RemoteConfigHelper.instance.getString(RemoteConfigHelper.Key.CONTACT)
         }
-        binding.txtVersion.text = "VER 1.0.0"
     }
 
     fun showDrawer(v: View) {

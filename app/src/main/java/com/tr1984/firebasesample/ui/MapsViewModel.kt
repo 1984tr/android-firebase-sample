@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.overlay.CircleOverlay
 import com.naver.maps.map.overlay.InfoWindow
+import com.tr1984.firebasesample.BuildConfig
 import com.tr1984.firebasesample.data.Pois
 import com.tr1984.firebasesample.extensions.disposeBag
 import com.tr1984.firebasesample.extensions.uiSubscribe
@@ -29,6 +30,7 @@ class MapsViewModel : ViewModel() {
     var contact = ObservableField("")
     var poiMainTitle = ObservableField("")
     var poiGroups = ObservableArrayList<Pois>()
+    var versionText = ObservableField("")
 
     private var compositeDisposable = CompositeDisposable()
 
@@ -63,6 +65,8 @@ class MapsViewModel : ViewModel() {
         }
         loadData()
         checkFcmId()
+
+        versionText.set("Ver. ${BuildConfig.VERSION_NAME}")
     }
 
     private fun loadData() {
