@@ -2,9 +2,9 @@ package com.tr1984.firebasesample.ui
 
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.MapFragment
@@ -12,11 +12,12 @@ import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.InfoWindow
 import com.tr1984.firebasesample.R
 import com.tr1984.firebasesample.databinding.ActivityMapsBinding
+import com.tr1984.firebasesample.databinding.DrawerHeaderBinding
 import com.tr1984.firebasesample.extensions.alert
 import com.tr1984.firebasesample.extensions.disposeBag
+import com.tr1984.firebasesample.extensions.toast
 import com.tr1984.firebasesample.extensions.uiSubscribe
 import com.tr1984.firebasesample.firebase.AnalyticsHelper
-import com.tr1984.firebasesample.firebase.RemoteConfigHelper
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
@@ -34,11 +35,11 @@ class MapsActivity : AppCompatActivity() {
         AnalyticsHelper.instance.trackScreen(this)
 
         viewModel = MapsViewModel()
-        subscribeViewModel()
-
         binding = ActivityMapsBinding.inflate(layoutInflater)
         binding.viewModel = viewModel
         setContentView(binding.root)
+
+        subscribeViewModel()
 
         Observable.combineLatest(
             getMap(),
@@ -47,10 +48,9 @@ class MapsActivity : AppCompatActivity() {
                 map
             })
             .uiSubscribe({
-                this.naverMap = it
-                settingMap()
-                viewModel.start()
+                settingMap(it)
                 setupDrawer()
+                viewModel.start()
             }, {
                 this@MapsActivity.alert("알림", it.localizedMessage)
             }).disposeBag(compositeDisposable)
@@ -69,6 +69,12 @@ class MapsActivity : AppCompatActivity() {
         }
     }
 
+    fun showDrawer(v: View) {
+        if (!binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            binding.drawerLayout.openDrawer(GravityCompat.START)
+        }
+    }
+
     private fun getMap(): Observable<NaverMap> {
         return Observable.create<NaverMap> { emit ->
             val fm = supportFragmentManager
@@ -83,7 +89,8 @@ class MapsActivity : AppCompatActivity() {
         }
     }
 
-    private fun settingMap() {
+    private fun settingMap(map: NaverMap) {
+        this.naverMap = map
         naverMap?.uiSettings?.run {
             isZoomControlEnabled = false
         }
@@ -97,12 +104,14 @@ class MapsActivity : AppCompatActivity() {
                 }, {
                     it.printStackTrace()
                 }).disposeBag(compositeDisposable)
+
             circleDrawSubject
                 .uiSubscribe({
                     it.map = naverMap
                 }, {
                     it.printStackTrace()
                 }).disposeBag(compositeDisposable)
+
             infoWindowSubject
                 .uiSubscribe({
                     it.second.adapter = object : InfoWindow.DefaultTextAdapter(this@MapsActivity) {
@@ -114,30 +123,26 @@ class MapsActivity : AppCompatActivity() {
                 }, {
                     it.printStackTrace()
                 }).disposeBag(compositeDisposable)
+
+            poiGroupsSubject
+                .uiSubscribe({ pois ->
+                    binding.poiGroups.run {
+                        layoutManager = LinearLayoutManager(this@MapsActivity)
+                        adapter = PoisAdapter(pois) { selected ->
+                            toast("click: ${selected.name}")
+                        }
+                        adapter?.notifyDataSetChanged()
+                    }
+                }, {
+                    it.printStackTrace()
+                }).disposeBag(compositeDisposable)
         }
     }
 
     private fun setupDrawer() {
         binding.drawerLayout.closeDrawer(GravityCompat.START)
-        binding.navView.getHeaderView(0).run {
-            val txtTitle = findViewById<TextView>(R.id.drawer_title)
-            txtTitle.text = RemoteConfigHelper.instance.getString(RemoteConfigHelper.Key.MAIN_TITLE)
-
-            val txtUpdated = findViewById<TextView>(R.id.drawer_updated)
-            txtUpdated.text = RemoteConfigHelper.instance.getString(RemoteConfigHelper.Key.LAST_UPDATED_AT)
-
-            val txtSource = findViewById<TextView>(R.id.drawer_source)
-            txtSource.text = RemoteConfigHelper.instance.getString(RemoteConfigHelper.Key.DATA_SOURCE)
-
-            val txtContact = findViewById<TextView>(R.id.drawer_contact)
-            txtContact.text = RemoteConfigHelper.instance.getString(RemoteConfigHelper.Key.CONTACT)
-        }
-    }
-
-    fun showDrawer(v: View) {
-        if (!binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            binding.drawerLayout.openDrawer(GravityCompat.START)
-        }
+        val headerBinding = DrawerHeaderBinding.bind(binding.navView.getHeaderView(0))
+        headerBinding.viewModel = viewModel
     }
 
     private fun drawCircle() {

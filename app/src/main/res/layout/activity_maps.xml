@@ -70,7 +70,7 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:id="@+id/txt_poi_main_title"
@@ -91,6 +91,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:text="@{viewModel.poiCount}"
                         android:textColor="#000000"
                         android:textSize="20sp"
                         android:textStyle="bold"
@@ -112,10 +113,8 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/poi_groups"
                         android:layout_width="0dp"
-                        android:layout_height="160dp"
-                        android:orientation="vertical"
-                        android:visibility="gone"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        android:layout_height="196dp"
+                        android:visibility="@{viewModel.poiListVisibility}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/img_poi_divider"
@@ -125,10 +124,12 @@
                         android:layout_width="0dp"
                         android:layout_height="36dp"
                         android:background="?attr/selectableItemBackground"
-                        android:src="@drawable/ic_arrow_down"
+                        android:onClick="@{() -> viewModel.actionExtension.invoke()}"
+                        android:src="@drawable/bg_poilist_extension"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/poi_groups" />
+                        app:layout_constraintTop_toBottomOf="@id/poi_groups"
+                        app:selected="@{viewModel.isExtendList()}" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -151,6 +152,7 @@
                 android:layout_gravity="bottom"
                 android:layout_marginBottom="16dp"
                 android:gravity="center"
+                android:text="@{viewModel.versionText}"
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp"
                 tools:text="VER 1.0.0" />

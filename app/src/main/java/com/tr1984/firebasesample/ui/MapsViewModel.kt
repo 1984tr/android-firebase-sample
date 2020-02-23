@@ -1,7 +1,7 @@
 package com.tr1984.firebasesample.ui
 
 import android.graphics.Color
-import androidx.databinding.ObservableArrayList
+import android.view.View
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
 import com.naver.maps.geometry.LatLng
@@ -24,15 +24,31 @@ class MapsViewModel : ViewModel() {
     var positionSubject = PublishSubject.create<LatLng>()
     var circleDrawSubject = PublishSubject.create<CircleOverlay>()
     var infoWindowSubject = PublishSubject.create<Pair<String, InfoWindow>>()
+    var poiGroupsSubject = PublishSubject.create<List<Pois>>()
     var title = ObservableField("")
     var dataSource = ObservableField("")
     var lastUpdatedAt = ObservableField("")
     var contact = ObservableField("")
     var poiMainTitle = ObservableField("")
-    var poiGroups = ObservableArrayList<Pois>()
     var versionText = ObservableField("")
+    var poiCount = ObservableField("0")
+    var poiListVisibility = ObservableField(View.GONE)
+    var isExtendList = ObservableField(false)
+    var actionExtension = {
+        isExtendPois = !isExtendPois
+    }
 
     private var compositeDisposable = CompositeDisposable()
+    private var isExtendPois = false
+    set(value) {
+        field = value
+        isExtendList.set(isExtendPois)
+        poiListVisibility.set(if (value) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        })
+    }
 
     override fun onCleared() {
         super.onCleared()
@@ -49,6 +65,8 @@ class MapsViewModel : ViewModel() {
     }
 
     fun start() {
+        versionText.set("Ver. ${BuildConfig.VERSION_NAME}")
+
         RemoteConfigHelper.instance.run {
             title.set(getString(RemoteConfigHelper.Key.MAIN_TITLE))
             dataSource.set(getString(RemoteConfigHelper.Key.DATA_SOURCE))
@@ -65,8 +83,6 @@ class MapsViewModel : ViewModel() {
         }
         loadData()
         checkFcmId()
-
-        versionText.set("Ver. ${BuildConfig.VERSION_NAME}")
     }
 
     private fun loadData() {
@@ -75,13 +91,15 @@ class MapsViewModel : ViewModel() {
         FirestoreHelper.instance.getPois()
             .uiSubscribe({
                 Logger.d("$it")
+                poiCount.set("${it.size}")
+                poiGroupsSubject.onNext(it)
+
                 for (pois in it) {
                     for (poi in pois.items) {
                         circleDrawSubject.onNext(poi.circleOverlay)
                         infoWindowSubject.onNext(poi.getMessage() to poi.infoWindow)
                     }
                 }
-
                 // draw circles
                 // draw popup
                 // add child to list
