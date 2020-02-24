@@ -9,6 +9,10 @@ class AuthenticationHelper private constructor() {
         FirebaseAuth.getInstance()
     }
 
+    fun isSigned() : Boolean {
+        return firebaseAuth.currentUser != null
+    }
+
     fun signInAnonymously(completion: (FirebaseUser?) -> Unit) {
         firebaseAuth.signInAnonymously()
             .addOnCompleteListener { task ->
@@ -18,6 +22,12 @@ class AuthenticationHelper private constructor() {
                     completion.invoke(null)
                 }
             }
+    }
+
+    fun sign() {
+        if (firebaseAuth.currentUser == null) {
+
+        }
     }
 
     companion object {
