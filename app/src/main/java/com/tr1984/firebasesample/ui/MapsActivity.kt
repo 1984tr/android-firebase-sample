@@ -130,6 +130,7 @@ class MapsActivity : AppCompatActivity() {
                         layoutManager = LinearLayoutManager(this@MapsActivity)
                         adapter = PoisAdapter(pois) { selected ->
                             toast("click: ${selected.name}")
+                            // TODO remove all marker exclude selected
                         }
                         adapter?.notifyDataSetChanged()
                     }

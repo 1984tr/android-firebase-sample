@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
+
     <data>
 
         <variable
             name="viewModel"
             type="com.tr1984.firebasesample.ui.MapsViewModel" />
     </data>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -14,10 +16,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="140dp"
-            android:paddingTop="20dp"
             android:background="@color/colorPrimary"
             android:gravity="center_vertical"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingTop="20dp">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/drawer_title"
@@ -35,8 +37,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
-                android:gravity="center_vertical"
                 android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
                 android:text="@{viewModel.lastUpdatedAt}"
                 android:textColor="@android:color/white"
                 android:textSize="14sp"
@@ -45,10 +47,32 @@
         </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/drawer_board"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="?attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:onClick="@{() -> viewModel.actionBoard.invoke()}"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:text="게시판"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:background="#eeeeee" />
+
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/drawer_source"
             android:layout_width="match_parent"
             android:layout_height="60dp"
+            android:background="?attr/selectableItemBackground"
             android:gravity="center_vertical"
+            android:onClick="@{() -> viewModel.actionSource.invoke()}"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:text="@{viewModel.dataSource}"
@@ -66,7 +90,9 @@
             android:id="@+id/drawer_contact"
             android:layout_width="match_parent"
             android:layout_height="60dp"
+            android:background="?attr/selectableItemBackground"
             android:gravity="center_vertical"
+            android:onClick="@{() -> viewModel.actionContact.invoke()}"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:text="@{viewModel.contact}"

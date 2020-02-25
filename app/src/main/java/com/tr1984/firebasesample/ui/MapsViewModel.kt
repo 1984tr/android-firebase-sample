@@ -38,6 +38,19 @@ class MapsViewModel : ViewModel() {
         isExtendPois = !isExtendPois
     }
 
+    var actionBoard = {
+        // TODO
+        
+    }
+
+    var actionContact = {
+        // TODO
+    }
+
+    var actionSource = {
+        // TODO
+    }
+
     private var compositeDisposable = CompositeDisposable()
     private var isExtendPois = false
     set(value) {
@@ -86,8 +99,6 @@ class MapsViewModel : ViewModel() {
     }
 
     private fun loadData() {
-        // TODO 전체 만들기
-        // memory cache
         FirestoreHelper.instance.getPois()
             .uiSubscribe({
                 Logger.d("$it")
@@ -100,6 +111,7 @@ class MapsViewModel : ViewModel() {
                         infoWindowSubject.onNext(poi.getMessage() to poi.infoWindow)
                     }
                 }
+                // TODO
                 // draw circles
                 // draw popup
                 // add child to list
