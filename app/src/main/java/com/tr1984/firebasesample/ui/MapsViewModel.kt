@@ -40,7 +40,6 @@ class MapsViewModel : ViewModel() {
 
     var actionBoard = {
         // TODO
-        
     }
 
     var actionContact = {
@@ -51,17 +50,21 @@ class MapsViewModel : ViewModel() {
         // TODO
     }
 
+    var pois = listOf<Pois>()
+
     private var compositeDisposable = CompositeDisposable()
     private var isExtendPois = false
-    set(value) {
-        field = value
-        isExtendList.set(isExtendPois)
-        poiListVisibility.set(if (value) {
-            View.VISIBLE
-        } else {
-            View.GONE
-        })
-    }
+        set(value) {
+            field = value
+            isExtendList.set(isExtendPois)
+            poiListVisibility.set(
+                if (value) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
+            )
+        }
 
     override fun onCleared() {
         super.onCleared()
@@ -86,13 +89,6 @@ class MapsViewModel : ViewModel() {
             lastUpdatedAt.set(getString(RemoteConfigHelper.Key.LAST_UPDATED_AT))
             contact.set(getString(RemoteConfigHelper.Key.CONTACT))
             poiMainTitle.set(getString(RemoteConfigHelper.Key.POI_MAIN_TITLE))
-
-            val initialMapPoint = get(RemoteConfigHelper.Key.INITIAL_MAP_POINT, HashMap::class.java)
-            val latitude = initialMapPoint["latitude"] as Double
-            val longitude = initialMapPoint["longitude"] as Double
-            positionSubject.onNext(LatLng(latitude, longitude))
-
-            circleDrawSubject.onNext(getCircleOverlay(LatLng(latitude, longitude), Color.RED))
         }
         loadData()
         checkFcmId()
@@ -102,21 +98,25 @@ class MapsViewModel : ViewModel() {
         FirestoreHelper.instance.getPois()
             .uiSubscribe({
                 Logger.d("$it")
+
+                pois = it
+
                 poiCount.set("${it.size}")
                 poiGroupsSubject.onNext(it)
 
+                var isFirst = true
                 for (pois in it) {
                     for (poi in pois.items) {
                         circleDrawSubject.onNext(poi.circleOverlay)
                         infoWindowSubject.onNext(poi.getMessage() to poi.infoWindow)
+                        if (isFirst) {
+                            isFirst = false
+                            positionSubject.onNext(LatLng(poi.point.latitude, poi.point.longitude))
+                        }
                     }
                 }
-                // TODO
-                // draw circles
-                // draw popup
-                // add child to list
             }, {
-
+                it.printStackTrace()
             }).disposeBag(compositeDisposable)
     }
 

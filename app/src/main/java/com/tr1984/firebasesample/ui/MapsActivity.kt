@@ -11,6 +11,7 @@ import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.InfoWindow
 import com.tr1984.firebasesample.R
+import com.tr1984.firebasesample.data.Pois
 import com.tr1984.firebasesample.databinding.ActivityMapsBinding
 import com.tr1984.firebasesample.databinding.DrawerHeaderBinding
 import com.tr1984.firebasesample.extensions.alert
@@ -130,7 +131,8 @@ class MapsActivity : AppCompatActivity() {
                         layoutManager = LinearLayoutManager(this@MapsActivity)
                         adapter = PoisAdapter(pois) { selected ->
                             toast("click: ${selected.name}")
-                            // TODO remove all marker exclude selected
+                            removeAllMarker()
+                            drawPoi(selected)
                         }
                         adapter?.notifyDataSetChanged()
                     }
@@ -146,21 +148,25 @@ class MapsActivity : AppCompatActivity() {
         headerBinding.viewModel = viewModel
     }
 
-    private fun drawCircle() {
-
+    private fun drawPoi(selected: Pois) {
+        viewModel.poiGroupsSubject
+        var isFirst = true
+        selected.items.forEach {
+            viewModel.circleDrawSubject.onNext(it.circleOverlay)
+            viewModel.infoWindowSubject.onNext(it.getMessage() to it.infoWindow)
+            if (isFirst) {
+                isFirst = false
+                viewModel.positionSubject.onNext(LatLng(it.point.latitude, it.point.longitude))
+            }
+        }
     }
 
-    private fun openInfoWindow(text: String, pos: LatLng) {
-        naverMap?.let { map ->
-            val infoWindow = InfoWindow().apply {
-                adapter = object : InfoWindow.DefaultTextAdapter(this@MapsActivity) {
-                    override fun getText(infoWindow: InfoWindow): CharSequence {
-                        return text
-                    }
-                }
-                position = pos
+    private fun removeAllMarker() {
+        viewModel.pois.forEach {
+            it.items.forEach {
+                it.circleOverlay.map = null
+                it.infoWindow.map = null
             }
-            infoWindow.open(map)
         }
     }
 }
