@@ -6,7 +6,7 @@ import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 
 object DynamicLinkHelper {
 
-    private const val prefix = "https://1984tr.page.link"
+    private const val prefix = "https://firebasesampletr.page.link"
     private const val pkgName = "com.tr1984.firebasesample"
 
     fun getDynamicLink(link: String): Uri {

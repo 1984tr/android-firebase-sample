@@ -38,7 +38,7 @@ class SignActivity : AppCompatActivity() {
     private fun initialize() {
         val uid = AuthenticationHelper.instance.getUid()
         Logger.d("SignActivity.initialize uid: $uid")
-        
+
         AnalyticsHelper.instance.setUserProperties(uid, Preferences.getLong(Preferences.Key.CreatedAt) ?: 0L)
         CrashlyticsHelper.setUserProperties(uid)
     }

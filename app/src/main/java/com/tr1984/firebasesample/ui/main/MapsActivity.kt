@@ -1,5 +1,6 @@
 package com.tr1984.firebasesample.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -14,10 +15,7 @@ import com.tr1984.firebasesample.R
 import com.tr1984.firebasesample.data.Pois
 import com.tr1984.firebasesample.databinding.ActivityMapsBinding
 import com.tr1984.firebasesample.databinding.DrawerHeaderBinding
-import com.tr1984.firebasesample.extensions.alert
-import com.tr1984.firebasesample.extensions.disposeBag
-import com.tr1984.firebasesample.extensions.toast
-import com.tr1984.firebasesample.extensions.uiSubscribe
+import com.tr1984.firebasesample.extensions.*
 import com.tr1984.firebasesample.firebase.AnalyticsHelper
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
@@ -140,6 +138,11 @@ class MapsActivity : AppCompatActivity() {
                 }, {
                     it.printStackTrace()
                 }).disposeBag(compositeDisposable)
+
+            shareSubject
+                .uiSubscribeWithError {
+                    startActivity(Intent(Intent.ACTION_VIEW, it))
+                }.disposeBag(compositeDisposable)
         }
     }
 

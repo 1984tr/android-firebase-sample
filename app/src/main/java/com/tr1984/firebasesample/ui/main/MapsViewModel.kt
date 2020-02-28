@@ -1,6 +1,7 @@
 package com.tr1984.firebasesample.ui.main
 
 import android.graphics.Color
+import android.net.Uri
 import android.view.View
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
@@ -11,6 +12,7 @@ import com.tr1984.firebasesample.BuildConfig
 import com.tr1984.firebasesample.data.Pois
 import com.tr1984.firebasesample.extensions.disposeBag
 import com.tr1984.firebasesample.extensions.uiSubscribe
+import com.tr1984.firebasesample.firebase.DynamicLinkHelper
 import com.tr1984.firebasesample.firebase.FirestoreHelper
 import com.tr1984.firebasesample.firebase.MapFirebaseMessagingService
 import com.tr1984.firebasesample.firebase.RemoteConfigHelper
@@ -21,6 +23,7 @@ import io.reactivex.subjects.PublishSubject
 
 class MapsViewModel : ViewModel() {
 
+    var shareSubject = PublishSubject.create<Uri>()
     var positionSubject = PublishSubject.create<LatLng>()
     var circleDrawSubject = PublishSubject.create<CircleOverlay>()
     var infoWindowSubject = PublishSubject.create<Pair<String, InfoWindow>>()
@@ -48,6 +51,12 @@ class MapsViewModel : ViewModel() {
 
     var actionSource = {
         // TODO
+    }
+
+    var actionShare = {
+        DynamicLinkHelper.getShortDynamicLink("https://github.com/1984tr") {
+            it?.run { shareSubject.onNext(this) }
+        }
     }
 
     var pois = listOf<Pois>()
