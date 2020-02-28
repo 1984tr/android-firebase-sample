@@ -17,9 +17,10 @@ class AnalyticsHelper private constructor() {
         this.context = context
     }
 
-    fun setUserProperties() {
-        analytics.setUserId("id_1984tr")
-        analytics.setUserProperty("name", "1984tr")
+    fun setUserProperties(uid: String, createAt: Long) {
+        analytics.setUserId(uid)
+        analytics.setUserProperty("uid", uid)
+        analytics.setUserProperty("created_at", "$createAt")
     }
 
     fun trackScreen(activity: Activity) {

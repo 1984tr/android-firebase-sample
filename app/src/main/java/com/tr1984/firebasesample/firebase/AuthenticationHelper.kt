@@ -9,9 +9,9 @@ class AuthenticationHelper private constructor() {
         FirebaseAuth.getInstance()
     }
 
-    fun isSigned() : Boolean {
-        return firebaseAuth.currentUser != null
-    }
+    fun getUid() = firebaseAuth.uid ?: "unknown"
+
+    fun isSigned() = firebaseAuth.currentUser != null
 
     fun signInAnonymously(completion: (FirebaseUser?) -> Unit) {
         firebaseAuth.signInAnonymously()
@@ -22,12 +22,6 @@ class AuthenticationHelper private constructor() {
                     completion.invoke(null)
                 }
             }
-    }
-
-    fun sign() {
-        if (firebaseAuth.currentUser == null) {
-
-        }
     }
 
     companion object {

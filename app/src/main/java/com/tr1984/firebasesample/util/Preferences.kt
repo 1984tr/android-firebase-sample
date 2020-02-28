@@ -31,7 +31,7 @@ object Preferences {
 
     fun getInt(key: Key) = pref?.getInt(key.name, 0)
 
-    fun putLong(key: Key, value: Long) {
+    fun put(key: Key, value: Long) {
         pref?.run {
             val editor = edit()
             editor.putLong(key.name, value)
@@ -62,6 +62,6 @@ object Preferences {
     fun getFloat(key: Key) = pref?.getFloat(key.name, 0f)
 
     enum class Key {
-        FcmToken, UserToken
+        FcmToken, UserToken, CreatedAt
     }
 }

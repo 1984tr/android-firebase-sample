@@ -4,10 +4,10 @@ import com.crashlytics.android.Crashlytics
 
 object CrashlyticsHelper {
 
-    fun setUserProperties() {
-        Crashlytics.setUserName("1984tr")
-        Crashlytics.setUserEmail("1984tr@1984tr.com")
-        Crashlytics.setUserIdentifier("id_1984tr")
+    fun setUserProperties(uid: String) {
+        Crashlytics.setUserName("name: $uid")
+        Crashlytics.setUserEmail("$uid@sample.com")
+        Crashlytics.setUserIdentifier(uid)
     }
 
     fun log(message: String) {
