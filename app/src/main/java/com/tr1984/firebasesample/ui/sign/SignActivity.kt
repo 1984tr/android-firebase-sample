@@ -1,4 +1,4 @@
-package com.tr1984.firebasesample.ui
+package com.tr1984.firebasesample.ui.sign
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,6 +6,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.tr1984.firebasesample.R
 import com.tr1984.firebasesample.firebase.AuthenticationHelper
+import com.tr1984.firebasesample.ui.main.MapsActivity
 
 class SignActivity : AppCompatActivity() {
 
@@ -27,6 +28,7 @@ class SignActivity : AppCompatActivity() {
     }
 
     private fun startMap() {
+
         startActivity(Intent(this, MapsActivity::class.java))
         finish()
     }

@@ -1,4 +1,4 @@
-package com.tr1984.firebasesample.ui
+package com.tr1984.firebasesample.ui.main
 
 import android.view.LayoutInflater
 import android.view.View

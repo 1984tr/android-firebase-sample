@@ -1,4 +1,4 @@
-package com.tr1984.firebasesample.ui
+package com.tr1984.firebasesample.ui.main
 
 import android.graphics.Color
 import android.view.View
@@ -43,7 +43,7 @@ class MapsViewModel : ViewModel() {
     }
 
     var actionContact = {
-        // TODO
+
     }
 
     var actionSource = {

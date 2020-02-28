@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".ui.SignActivity"
+            android:name=".ui.sign.SignActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,7 +25,7 @@
         </activity>
 
         <activity
-            android:name=".ui.MapsActivity"
+            android:name=".ui.main.MapsActivity"
             android:screenOrientation="portrait" />
 
         <service

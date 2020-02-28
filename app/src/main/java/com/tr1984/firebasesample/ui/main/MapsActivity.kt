@@ -1,4 +1,4 @@
-package com.tr1984.firebasesample.ui
+package com.tr1984.firebasesample.ui.main
 
 import android.os.Bundle
 import android.view.View
@@ -129,11 +129,12 @@ class MapsActivity : AppCompatActivity() {
                 .uiSubscribe({ pois ->
                     binding.poiGroups.run {
                         layoutManager = LinearLayoutManager(this@MapsActivity)
-                        adapter = PoisAdapter(pois) { selected ->
-                            toast("click: ${selected.name}")
-                            removeAllMarker()
-                            drawPoi(selected)
-                        }
+                        adapter =
+                            PoisAdapter(pois) { selected ->
+                                toast("click: ${selected.name}")
+                                removeAllMarker()
+                                drawPoi(selected)
+                            }
                         adapter?.notifyDataSetChanged()
                     }
                 }, {

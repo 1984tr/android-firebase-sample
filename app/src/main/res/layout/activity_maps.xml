@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.tr1984.firebasesample.ui.MapsViewModel" />
+            type="com.tr1984.firebasesample.ui.main.MapsViewModel" />
 
     </data>
 
