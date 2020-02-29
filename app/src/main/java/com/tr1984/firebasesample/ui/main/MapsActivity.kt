@@ -1,6 +1,7 @@
 package com.tr1984.firebasesample.ui.main
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -142,6 +143,16 @@ class MapsActivity : AppCompatActivity() {
             shareSubject
                 .uiSubscribeWithError {
                     startActivity(Intent(Intent.ACTION_VIEW, it))
+                }.disposeBag(compositeDisposable)
+
+            sourceLinkSubject
+                .uiSubscribeWithError {
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(it)))
+                }.disposeBag(compositeDisposable)
+
+            contactLinkSubject
+                .uiSubscribeWithError {
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("mailto:$it")))
                 }.disposeBag(compositeDisposable)
         }
     }

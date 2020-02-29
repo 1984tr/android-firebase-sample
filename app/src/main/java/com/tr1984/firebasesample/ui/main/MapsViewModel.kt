@@ -40,17 +40,20 @@ class MapsViewModel : ViewModel() {
     var actionExtension = {
         isExtendPois = !isExtendPois
     }
+    var sourceLinkSubject = PublishSubject.create<String>()
+    var contactLinkSubject = PublishSubject.create<String>()
 
     var actionBoard = {
         // TODO
     }
 
     var actionContact = {
-
+        contactLinkSubject.onNext("jollytris@gmail.com")
     }
 
     var actionSource = {
-        // TODO
+        val link = RemoteConfigHelper.instance.getString(RemoteConfigHelper.Key.DATA_SOURCE_LINK) ?: ""
+        sourceLinkSubject.onNext(link)
     }
 
     var actionShare = {
