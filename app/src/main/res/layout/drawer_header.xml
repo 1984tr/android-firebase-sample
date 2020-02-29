@@ -52,7 +52,7 @@
             android:layout_height="60dp"
             android:background="?attr/selectableItemBackground"
             android:gravity="center_vertical"
-            android:onClick="@{() -> viewModel.actionBoard.invoke()}"
+            android:onClick="@{() -> viewModel.actionFeeds.invoke()}"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:text="게시판"

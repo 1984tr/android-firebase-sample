@@ -42,9 +42,10 @@ class MapsViewModel : ViewModel() {
     }
     var sourceLinkSubject = PublishSubject.create<String>()
     var contactLinkSubject = PublishSubject.create<String>()
+    var startFeedsSubject = PublishSubject.create<Unit>()
 
-    var actionBoard = {
-        // TODO
+    var actionFeeds = {
+        startFeedsSubject.onNext(Unit)
     }
 
     var actionContact = {

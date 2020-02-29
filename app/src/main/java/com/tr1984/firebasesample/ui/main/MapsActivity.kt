@@ -18,6 +18,7 @@ import com.tr1984.firebasesample.databinding.ActivityMapsBinding
 import com.tr1984.firebasesample.databinding.DrawerHeaderBinding
 import com.tr1984.firebasesample.extensions.*
 import com.tr1984.firebasesample.firebase.AnalyticsHelper
+import com.tr1984.firebasesample.ui.feeds.FeedsActivity
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
@@ -153,6 +154,11 @@ class MapsActivity : AppCompatActivity() {
             contactLinkSubject
                 .uiSubscribeWithError {
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("mailto:$it")))
+                }.disposeBag(compositeDisposable)
+
+            startFeedsSubject
+                .uiSubscribeWithError {
+                    startActivity(Intent(this@MapsActivity, FeedsActivity::class.java))
                 }.disposeBag(compositeDisposable)
         }
     }
