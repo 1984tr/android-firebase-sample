@@ -12,7 +12,6 @@ import com.tr1984.firebasesample.BuildConfig
 import com.tr1984.firebasesample.data.Pois
 import com.tr1984.firebasesample.extensions.disposeBag
 import com.tr1984.firebasesample.extensions.uiSubscribe
-import com.tr1984.firebasesample.firebase.DynamicLinkHelper
 import com.tr1984.firebasesample.firebase.FirestoreHelper
 import com.tr1984.firebasesample.firebase.MapFirebaseMessagingService
 import com.tr1984.firebasesample.firebase.RemoteConfigHelper
@@ -39,28 +38,6 @@ class MapsViewModel : ViewModel() {
     var isExtendList = ObservableField(false)
     var actionExtension = {
         isExtendPois = !isExtendPois
-    }
-    var sourceLinkSubject = PublishSubject.create<String>()
-    var contactLinkSubject = PublishSubject.create<String>()
-    var startFeedsSubject = PublishSubject.create<Unit>()
-
-    var actionFeeds = {
-        startFeedsSubject.onNext(Unit)
-    }
-
-    var actionContact = {
-        contactLinkSubject.onNext("jollytris@gmail.com")
-    }
-
-    var actionSource = {
-        val link = RemoteConfigHelper.instance.getString(RemoteConfigHelper.Key.DATA_SOURCE_LINK) ?: ""
-        sourceLinkSubject.onNext(link)
-    }
-
-    var actionShare = {
-        DynamicLinkHelper.getShortDynamicLink("https://github.com/1984tr") {
-            it?.run { shareSubject.onNext(this) }
-        }
     }
 
     var pois = listOf<Pois>()

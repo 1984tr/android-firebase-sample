@@ -6,6 +6,10 @@
         <variable
             name="viewModel"
             type="com.tr1984.firebasesample.ui.main.MapsViewModel" />
+
+        <variable
+            name="activity"
+            type="com.tr1984.firebasesample.ui.main.MapsActivity" />
     </data>
 
     <LinearLayout
@@ -52,7 +56,7 @@
             android:layout_height="60dp"
             android:background="?attr/selectableItemBackground"
             android:gravity="center_vertical"
-            android:onClick="@{() -> viewModel.actionFeeds.invoke()}"
+            android:onClick="@{() -> activity.startFeedActivity()}"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:text="게시판"
@@ -72,7 +76,7 @@
             android:layout_height="60dp"
             android:background="?attr/selectableItemBackground"
             android:gravity="center_vertical"
-            android:onClick="@{() -> viewModel.actionSource.invoke()}"
+            android:onClick="@{() -> activity.moveToSource()}"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:text="@{viewModel.dataSource}"
@@ -92,7 +96,7 @@
             android:layout_height="60dp"
             android:background="?attr/selectableItemBackground"
             android:gravity="center_vertical"
-            android:onClick="@{() -> viewModel.actionContact.invoke()}"
+            android:onClick="@{() -> activity.sendMailToContact()}"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:text="@{viewModel.contact}"
@@ -112,7 +116,7 @@
             android:layout_height="60dp"
             android:background="?attr/selectableItemBackground"
             android:gravity="center_vertical"
-            android:onClick="@{() -> viewModel.actionShare.invoke()}"
+            android:onClick="@{() -> activity.share()}"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:text="공유하기"

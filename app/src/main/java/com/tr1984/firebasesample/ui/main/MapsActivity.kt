@@ -16,8 +16,13 @@ import com.tr1984.firebasesample.R
 import com.tr1984.firebasesample.data.Pois
 import com.tr1984.firebasesample.databinding.ActivityMapsBinding
 import com.tr1984.firebasesample.databinding.DrawerHeaderBinding
-import com.tr1984.firebasesample.extensions.*
+import com.tr1984.firebasesample.extensions.alert
+import com.tr1984.firebasesample.extensions.disposeBag
+import com.tr1984.firebasesample.extensions.toast
+import com.tr1984.firebasesample.extensions.uiSubscribe
 import com.tr1984.firebasesample.firebase.AnalyticsHelper
+import com.tr1984.firebasesample.firebase.DynamicLinkHelper
+import com.tr1984.firebasesample.firebase.RemoteConfigHelper
 import com.tr1984.firebasesample.ui.feeds.FeedsActivity
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
@@ -74,6 +79,25 @@ class MapsActivity : AppCompatActivity() {
         if (!binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
             binding.drawerLayout.openDrawer(GravityCompat.START)
         }
+    }
+
+    fun share() {
+        DynamicLinkHelper.getShortDynamicLink("https://github.com/1984tr") {
+            it?.run { startActivity(Intent(Intent.ACTION_VIEW, this)) }
+        }
+    }
+
+    fun sendMailToContact() {
+        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("mailto:jollytris@gmail.com")))
+    }
+
+    fun startFeedActivity() {
+        startActivity(Intent(this@MapsActivity, FeedsActivity::class.java))
+    }
+
+    fun moveToSource() {
+        val link = RemoteConfigHelper.instance.getString(RemoteConfigHelper.Key.DATA_SOURCE_LINK) ?: ""
+        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link)))
     }
 
     private fun getMap(): Observable<NaverMap> {
@@ -140,26 +164,6 @@ class MapsActivity : AppCompatActivity() {
                 }, {
                     it.printStackTrace()
                 }).disposeBag(compositeDisposable)
-
-            shareSubject
-                .uiSubscribeWithError {
-                    startActivity(Intent(Intent.ACTION_VIEW, it))
-                }.disposeBag(compositeDisposable)
-
-            sourceLinkSubject
-                .uiSubscribeWithError {
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(it)))
-                }.disposeBag(compositeDisposable)
-
-            contactLinkSubject
-                .uiSubscribeWithError {
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("mailto:$it")))
-                }.disposeBag(compositeDisposable)
-
-            startFeedsSubject
-                .uiSubscribeWithError {
-                    startActivity(Intent(this@MapsActivity, FeedsActivity::class.java))
-                }.disposeBag(compositeDisposable)
         }
     }
 
@@ -167,6 +171,7 @@ class MapsActivity : AppCompatActivity() {
         binding.drawerLayout.closeDrawer(GravityCompat.START)
         val headerBinding = DrawerHeaderBinding.bind(binding.navView.getHeaderView(0))
         headerBinding.viewModel = viewModel
+        headerBinding.activity = this
     }
 
     private fun drawPoi(selected: Pois) {
