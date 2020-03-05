@@ -90,7 +90,7 @@ class MapsViewModel : ViewModel() {
                 poiCount.set("${it.size}")
                 poiGroupsSubject.onNext(it)
 
-                for (pois in it) {
+                it.forEach { pois ->
                     poisSubject.onNext(pois)
                 }
             }, {

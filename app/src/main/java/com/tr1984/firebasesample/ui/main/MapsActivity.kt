@@ -96,7 +96,8 @@ class MapsActivity : AppCompatActivity() {
     }
 
     fun moveToSource() {
-        val link = RemoteConfigHelper.instance.getString(RemoteConfigHelper.Key.DATA_SOURCE_LINK) ?: ""
+        val link =
+            RemoteConfigHelper.instance.getString(RemoteConfigHelper.Key.DATA_SOURCE_LINK) ?: ""
         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link)))
     }
 
@@ -163,7 +164,10 @@ class MapsActivity : AppCompatActivity() {
     }
 
     private fun drawMarker(pois: Pois) {
-        viewModel.poiGroupsSubject
+        binding.lblPoisTitle.run {
+            visibility = View.VISIBLE
+            text = pois.name
+        }
         var isFirst = true
         pois.items.forEach { poi ->
             poi.circleOverlay.map = naverMap
