@@ -1,13 +1,10 @@
 package com.tr1984.firebasesample.ui.main
 
-import android.graphics.Color
 import android.net.Uri
 import android.view.View
 import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.overlay.CircleOverlay
-import com.naver.maps.map.overlay.InfoWindow
 import com.tr1984.firebasesample.BuildConfig
 import com.tr1984.firebasesample.data.Pois
 import com.tr1984.firebasesample.extensions.disposeBag
@@ -24,8 +21,7 @@ class MapsViewModel : ViewModel() {
 
     var shareSubject = PublishSubject.create<Uri>()
     var positionSubject = PublishSubject.create<LatLng>()
-    var circleDrawSubject = PublishSubject.create<CircleOverlay>()
-    var infoWindowSubject = PublishSubject.create<Pair<String, InfoWindow>>()
+    var poisSubject = PublishSubject.create<Pois>()
     var poiGroupsSubject = PublishSubject.create<List<Pois>>()
     var title = ObservableField("")
     var dataSource = ObservableField("")
@@ -94,16 +90,8 @@ class MapsViewModel : ViewModel() {
                 poiCount.set("${it.size}")
                 poiGroupsSubject.onNext(it)
 
-                var isFirst = true
                 for (pois in it) {
-                    for (poi in pois.items) {
-                        circleDrawSubject.onNext(poi.circleOverlay)
-                        infoWindowSubject.onNext(poi.getMessage() to poi.infoWindow)
-                        if (isFirst) {
-                            isFirst = false
-                            positionSubject.onNext(LatLng(poi.point.latitude, poi.point.longitude))
-                        }
-                    }
+                    poisSubject.onNext(pois)
                 }
             }, {
                 it.printStackTrace()
@@ -113,16 +101,6 @@ class MapsViewModel : ViewModel() {
     private fun checkFcmId() {
         MapFirebaseMessagingService.getInstanceId {
             // TODO add realtimedb with auth
-        }
-    }
-
-    private fun getCircleOverlay(latLng: LatLng, color: Int): CircleOverlay {
-        return CircleOverlay().apply {
-            this.center = latLng
-            this.radius = 20.0 // m
-            this.color = color
-            this.outlineWidth = 2 // px
-            this.outlineColor = Color.BLACK
         }
     }
 }

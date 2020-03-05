@@ -130,25 +130,6 @@ class MapsActivity : AppCompatActivity() {
                     it.printStackTrace()
                 }).disposeBag(compositeDisposable)
 
-            circleDrawSubject
-                .uiSubscribe({
-                    it.map = naverMap
-                }, {
-                    it.printStackTrace()
-                }).disposeBag(compositeDisposable)
-
-            infoWindowSubject
-                .uiSubscribe({
-                    it.second.adapter = object : InfoWindow.DefaultTextAdapter(this@MapsActivity) {
-                        override fun getText(infoWindow: InfoWindow): CharSequence {
-                            return it.first
-                        }
-                    }
-                    naverMap?.let { map -> it.second.open(map) }
-                }, {
-                    it.printStackTrace()
-                }).disposeBag(compositeDisposable)
-
             poiGroupsSubject
                 .uiSubscribe({ pois ->
                     binding.poiGroups.run {
@@ -157,10 +138,17 @@ class MapsActivity : AppCompatActivity() {
                             PoisAdapter(pois) { selected ->
                                 toast("click: ${selected.name}")
                                 removeAllMarker()
-                                drawPoi(selected)
+                                drawMarker(selected)
                             }
                         adapter?.notifyDataSetChanged()
                     }
+                }, {
+                    it.printStackTrace()
+                }).disposeBag(compositeDisposable)
+
+            poisSubject
+                .uiSubscribe({
+                    drawMarker(it)
                 }, {
                     it.printStackTrace()
                 }).disposeBag(compositeDisposable)
@@ -174,21 +162,30 @@ class MapsActivity : AppCompatActivity() {
         headerBinding.activity = this
     }
 
-    private fun drawPoi(selected: Pois) {
+    private fun drawMarker(pois: Pois) {
         viewModel.poiGroupsSubject
         var isFirst = true
-        selected.items.forEach {
-            viewModel.circleDrawSubject.onNext(it.circleOverlay)
-            viewModel.infoWindowSubject.onNext(it.getMessage() to it.infoWindow)
+        pois.items.forEach { poi ->
+            poi.circleOverlay.map = naverMap
+            poi.infoWindow.adapter = object : InfoWindow.DefaultTextAdapter(this@MapsActivity) {
+                override fun getText(infoWindow: InfoWindow): CharSequence {
+                    return poi.getMessage()
+                }
+            }
+            naverMap?.let { map -> poi.infoWindow.open(map) }
             if (isFirst) {
                 isFirst = false
-                viewModel.positionSubject.onNext(LatLng(it.point.latitude, it.point.longitude))
+                viewModel.positionSubject.onNext(LatLng(poi.point.latitude, poi.point.longitude))
             }
+        }
+        if (pois.paths.coords.isNotEmpty()) {
+            pois.paths.map = naverMap
         }
     }
 
     private fun removeAllMarker() {
         viewModel.pois.forEach {
+            it.paths.map = null
             it.items.forEach {
                 it.circleOverlay.map = null
                 it.infoWindow.map = null
