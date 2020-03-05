@@ -83,7 +83,12 @@ class MapsActivity : AppCompatActivity() {
 
     fun share() {
         DynamicLinkHelper.getShortDynamicLink("https://github.com/1984tr") {
-            it?.run { startActivity(Intent(Intent.ACTION_VIEW, this)) }
+            it?.let { link ->
+                startActivity(Intent.createChooser(Intent(Intent.ACTION_SEND).apply {
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_TEXT, link)
+                }, "공유하기"))
+            }
         }
     }
 
