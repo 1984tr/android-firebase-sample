@@ -1,6 +1,7 @@
 package com.tr1984.firebasesample.firebase
 
 import android.net.Uri
+import android.util.Log
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageMetadata
 import io.reactivex.Single
@@ -26,14 +27,21 @@ class FireStorageHelper private constructor() {
             // Listen for state changes, errors, and completion of the upload.
             uploadTask.addOnProgressListener { taskSnapshot ->
                 val progress = (100.0 * taskSnapshot.bytesTransferred) / taskSnapshot.totalByteCount
-                println("Upload is $progress% done")
+                Log.d("Test", "Upload is $progress% done")
             }.addOnPausedListener {
-                println("Upload is paused")
+                Log.d("Test", "Upload is paused")
             }.addOnFailureListener {
                 // Handle unsuccessful uploads
-            }.addOnSuccessListener {
+            }.addOnSuccessListener { task ->
                 // Handle successful uploads on complete
                 // ...
+            }.addOnCompleteListener {
+                if (it.isSuccessful) {
+                    val downloadUri = it.result
+                    Log.d("Test", "downloadUri: $downloadUri")
+                } else {
+                    Log.d("Test", "error: ${it.exception?.message}")
+                }
             }
         }
     }
