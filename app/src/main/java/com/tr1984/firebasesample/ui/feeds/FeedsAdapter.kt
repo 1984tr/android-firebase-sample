@@ -23,7 +23,7 @@ class FeedsAdapter : RecyclerView.Adapter<FeedsAdapter.FeedsHolder>() {
     }
 
     fun bind() {
-        
+
     }
 
     class FeedsHolder(val view: View) : RecyclerView.ViewHolder(view) {
