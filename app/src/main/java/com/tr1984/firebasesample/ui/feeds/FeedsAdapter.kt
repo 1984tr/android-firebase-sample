@@ -1,39 +1,30 @@
 package com.tr1984.firebasesample.ui.feeds
 
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.databinding.ObservableArrayList
 import androidx.recyclerview.widget.RecyclerView
-import com.tr1984.firebasesample.data.Feed
+import com.tr1984.firebasesample.R
+import com.tr1984.firebasesample.databinding.ViewItemFeedBinding
 
-class FeedsAdapter : RecyclerView.Adapter<FeedsAdapter.FeedsHolder>() {
-
-    val items = ObservableArrayList<Feed>()
+class FeedsAdapter(private val items: ObservableArrayList<FeedViewModel>) : RecyclerView.Adapter<FeedsAdapter.FeedsHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedsHolder {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return FeedsHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_item_feed, parent, false))
     }
 
     override fun onBindViewHolder(holder: FeedsHolder, position: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        holder.binding.viewModel = items[position]
     }
 
     override fun getItemCount(): Int {
         return items.size
     }
 
-    fun bind() {
-
-    }
-
     class FeedsHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
-        init {
-
-        }
-
-        fun bind(feed: Feed) {
-
-        }
+        var binding: ViewItemFeedBinding = DataBindingUtil.bind(view)!!
     }
 }

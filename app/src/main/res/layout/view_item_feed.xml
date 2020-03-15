@@ -5,6 +5,10 @@
 
     <data>
 
+        <variable
+            name="viewModel"
+            type="com.tr1984.firebasesample.ui.feeds.FeedViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -36,6 +40,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:singleLine="true"
+                    android:text="@{viewModel.title}"
                     android:textColor="#3a3a3a"
                     android:textSize="16sp"
                     app:layout_constraintEnd_toStartOf="@id/delete"
@@ -48,12 +53,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="16dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:onClick="@{() -> viewModel.actionDelete.invoke()}"
                     android:text="삭제"
                     android:textColor="#3a3a3a"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="@id/title"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/title" />
+                    app:layout_constraintTop_toTopOf="@id/title"
+                    app:visibleIfTrue="@{viewModel.isOwner()}" />
 
                 <ImageView
                     android:id="@+id/divider"
@@ -75,6 +83,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginRight="16dp"
                     android:layout_marginBottom="16dp"
+                    android:text="@{viewModel.message}"
                     android:textColor="#3a3a3a"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
