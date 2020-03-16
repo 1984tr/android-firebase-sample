@@ -10,6 +10,10 @@ class FeedsViewModel : ViewModel() {
 
     var items = ObservableArrayList<FeedViewModel>()
 
+    fun start() {
+        items.add(FeedViewModel())
+    }
+
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.clear()
