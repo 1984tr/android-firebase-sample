@@ -19,7 +19,7 @@
         android:layout_height="match_parent">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/lbl_title"
+            android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="56dp"
             android:gravity="center"
@@ -37,9 +37,9 @@
             android:background="?attr/selectableItemBackground"
             android:onClick="@{() -> activity.finish()}"
             android:src="@drawable/ic_arrow_back"
-            app:layout_constraintBottom_toBottomOf="@id/lbl_title"
-            app:layout_constraintStart_toStartOf="@id/lbl_title"
-            app:layout_constraintTop_toTopOf="@id/lbl_title" />
+            app:layout_constraintBottom_toBottomOf="@id/title"
+            app:layout_constraintStart_toStartOf="@id/title"
+            app:layout_constraintTop_toTopOf="@id/title" />
 
         <Button
             android:layout_width="wrap_content"
@@ -48,17 +48,77 @@
             android:text="확인"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@id/lbl_title"
-            app:layout_constraintEnd_toEndOf="@id/lbl_title"
-            app:layout_constraintTop_toTopOf="@id/lbl_title" />
+            app:layout_constraintBottom_toBottomOf="@id/title"
+            app:layout_constraintEnd_toEndOf="@id/title"
+            app:layout_constraintTop_toTopOf="@id/title" />
 
         <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/divider"
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:background="#eeeeee"
-            app:layout_constraintEnd_toEndOf="@id/lbl_title"
-            app:layout_constraintStart_toStartOf="@id/lbl_title"
-            app:layout_constraintTop_toBottomOf="@id/lbl_title" />
+            app:layout_constraintEnd_toEndOf="@id/title"
+            app:layout_constraintStart_toStartOf="@id/title"
+            app:layout_constraintTop_toBottomOf="@id/title" />
+
+        <EditText
+            android:id="@+id/edit_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/bg_edittext"
+            android:hint="제목"
+            android:imeOptions="actionNext"
+            android:maxLines="1"
+            android:padding="16dp"
+            android:singleLine="true"
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimaryLight"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider" />
+
+        <EditText
+            android:id="@+id/edit_message"
+            android:layout_width="0dp"
+            android:layout_height="180dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/bg_edittext"
+            android:gravity="left|top"
+            android:hint="내용"
+            android:imeOptions="actionNext"
+            android:maxLines="1"
+            android:padding="16dp"
+            android:singleLine="true"
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimaryLight"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edit_title" />
+
+        <TextView
+            android:id="@+id/attachment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/bg_edittext"
+            android:gravity="center"
+            android:hint="첨부 이미지 추가"
+            android:padding="16dp"
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimaryLight"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edit_message" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
