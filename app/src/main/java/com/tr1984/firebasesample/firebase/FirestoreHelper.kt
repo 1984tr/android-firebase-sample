@@ -54,7 +54,7 @@ class FirestoreHelper private constructor() {
         }
     }
 
- 
+
 
 //    fun getFeeds(callback: (List<Feed>) -> Unit) {
 //        firestore.collection("feeds").orderBy("time", Query.Direction.DESCENDING)

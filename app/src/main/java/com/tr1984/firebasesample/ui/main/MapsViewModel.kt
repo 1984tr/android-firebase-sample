@@ -3,7 +3,6 @@ package com.tr1984.firebasesample.ui.main
 import android.net.Uri
 import android.view.View
 import androidx.databinding.ObservableField
-import androidx.lifecycle.ViewModel
 import com.naver.maps.geometry.LatLng
 import com.tr1984.firebasesample.BuildConfig
 import com.tr1984.firebasesample.data.Pois
@@ -17,7 +16,7 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 
-class MapsViewModel : ViewModel() {
+class MapsViewModel {
 
     var shareSubject = PublishSubject.create<Uri>()
     var positionSubject = PublishSubject.create<LatLng>()
@@ -52,8 +51,7 @@ class MapsViewModel : ViewModel() {
             )
         }
 
-    override fun onCleared() {
-        super.onCleared()
+    fun destroy() {
         compositeDisposable.clear()
     }
 

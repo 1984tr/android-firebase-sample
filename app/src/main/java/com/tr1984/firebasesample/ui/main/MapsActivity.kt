@@ -65,6 +65,7 @@ class MapsActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         compositeDisposable.clear()
+        viewModel.destroy()
     }
 
     override fun onBackPressed() {

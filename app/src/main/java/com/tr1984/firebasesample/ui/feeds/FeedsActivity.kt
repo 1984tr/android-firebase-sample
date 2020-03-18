@@ -1,5 +1,6 @@
 package com.tr1984.firebasesample.ui.feeds
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,9 +20,16 @@ class FeedsActivity : AppCompatActivity() {
         binding.viewModel = viewModel
         setContentView(binding.root)
 
+
+
+
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = FeedsAdapter(viewModel.items)
 
         viewModel.start()
+    }
+
+    fun moveToWrite() {
+        startActivity(Intent(this, FeedWriteActivity::class.java))
     }
 }

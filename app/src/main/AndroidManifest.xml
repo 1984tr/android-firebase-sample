@@ -32,6 +32,10 @@
             android:name=".ui.feeds.FeedsActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".ui.feeds.FeedWriteActivity"
+            android:screenOrientation="portrait" />
+
         <service
             android:name="com.tr1984.firebasesample.firebase.MapFirebaseMessagingService"
             android:exported="false">
