@@ -3,8 +3,10 @@ package com.tr1984.firebasesample.firebase
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
+import com.tr1984.firebasesample.data.Feed
 import com.tr1984.firebasesample.data.Poi
 import com.tr1984.firebasesample.data.Pois
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 
@@ -79,6 +81,12 @@ class FirestoreHelper private constructor() {
 //                }
 //        }
 //    }
+
+    fun insertFeed(feed: Feed) : Completable {
+        return Completable.fromCallable {
+
+        }
+    }
 //
 //    fun insertFeed(feed: Feed, callBack: (isSucess: Boolean) -> Unit) {
 //        val target = if (feed.id <= 0) {
