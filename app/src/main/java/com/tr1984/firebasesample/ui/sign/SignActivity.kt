@@ -28,6 +28,7 @@ class SignActivity : AppCompatActivity() {
         AuthenticationHelper.instance.signInAnonymously { user ->
             user?.getIdToken(false)?.addOnCompleteListener {
                 Preferences.put(Preferences.Key.CreatedAt, System.currentTimeMillis())
+                Preferences.put(Preferences.Key.Uid, user.uid)
 
                 initialize()
                 startMap()
@@ -39,7 +40,10 @@ class SignActivity : AppCompatActivity() {
         val uid = AuthenticationHelper.instance.getUid()
         Logger.d("SignActivity.initialize uid: $uid")
 
-        AnalyticsHelper.instance.setUserProperties(uid, Preferences.getLong(Preferences.Key.CreatedAt) ?: 0L)
+        AnalyticsHelper.instance.setUserProperties(
+            uid,
+            Preferences.getLong(Preferences.Key.CreatedAt) ?: 0L
+        )
         CrashlyticsHelper.setUserProperties(uid)
     }
 

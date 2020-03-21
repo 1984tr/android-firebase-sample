@@ -6,6 +6,7 @@ import com.tr1984.firebasesample.extensions.disposeBag
 import com.tr1984.firebasesample.extensions.uiSubscribe
 import com.tr1984.firebasesample.firebase.FireStorageHelper
 import com.tr1984.firebasesample.firebase.FirestoreHelper
+import com.tr1984.firebasesample.util.Preferences
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
@@ -35,7 +36,11 @@ class FeedWriteViewModel {
             toastSubject.onNext("내용을 입력해주세요.")
             return
         }
-
+        val uid = Preferences.getString(Preferences.Key.Uid) ?: ""
+        if (uid.isEmpty()) {
+            toastSubject.onNext("잠시 후 다시 시도해주세요 :(")
+            return
+        }
         Single.just(path)
             .flatMap {
                 if (it.isEmpty()) {
@@ -44,9 +49,10 @@ class FeedWriteViewModel {
                     FireStorageHelper.upload(it)
                 }
             }.map {
-                Feed(0, "", title, message, it, null)
-            }.flatMapCompletable { FirestoreHelper.instance.insertFeed(it) }
-            .uiSubscribe({
+                Feed(0, uid, title, message, it, null)
+            }.flatMapCompletable {
+                FirestoreHelper.instance.insertFeed(it)
+            }.uiSubscribe({
                 toastSubject.onNext("게시가 완료 되었습니다. :)")
                 uploadCompleteSubject.onNext(Unit)
             }, {

@@ -62,6 +62,6 @@ object Preferences {
     fun getFloat(key: Key) = pref?.getFloat(key.name, 0f)
 
     enum class Key {
-        FcmToken, UserToken, CreatedAt
+        FcmToken, UserToken, CreatedAt, Uid
     }
 }

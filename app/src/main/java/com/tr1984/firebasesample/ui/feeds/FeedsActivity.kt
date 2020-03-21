@@ -22,7 +22,7 @@ class FeedsActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupUI()
-        
+
         viewModel.start()
     }
 
