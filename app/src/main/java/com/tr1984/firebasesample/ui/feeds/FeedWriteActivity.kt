@@ -10,6 +10,8 @@ import android.provider.MediaStore
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.tr1984.firebasesample.databinding.ActivityFeedWriteBinding
+import com.tr1984.firebasesample.extensions.disposeBag
+import com.tr1984.firebasesample.extensions.toast
 import com.tr1984.firebasesample.extensions.uiSubscribeWithError
 import com.tr1984.firebasesample.firebase.FireStorageHelper
 
@@ -26,6 +28,8 @@ class FeedWriteActivity : AppCompatActivity() {
         binding.activity = this
         binding.viewModel = viewModel
         setContentView(binding.root)
+
+        subscribeViewModel()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -88,5 +92,18 @@ class FeedWriteActivity : AppCompatActivity() {
             cursor.close()
         }
         return null
+    }
+
+    private fun subscribeViewModel() {
+        viewModel.run {
+            toastSubject.uiSubscribeWithError {
+                this@FeedWriteActivity.toast(it)
+            }.disposeBag(compositeDisposable)
+
+            uploadCompleteSubject.uiSubscribeWithError {
+                setResult(Activity.RESULT_OK)
+                finish()
+            }.disposeBag(compositeDisposable)
+        }
     }
 }

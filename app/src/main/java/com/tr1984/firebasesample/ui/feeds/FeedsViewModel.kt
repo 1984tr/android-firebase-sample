@@ -14,6 +14,10 @@ class FeedsViewModel : ViewModel() {
         items.add(FeedViewModel())
     }
 
+    fun refresh() {
+        // TODO
+    }
+
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.clear()

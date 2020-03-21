@@ -83,6 +83,7 @@ class FirestoreHelper private constructor() {
 //    }
 
     fun insertFeed(feed: Feed) : Completable {
+        // TODO
         return Completable.fromCallable {
 
         }

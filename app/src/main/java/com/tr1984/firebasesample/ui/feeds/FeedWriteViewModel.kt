@@ -12,12 +12,13 @@ import io.reactivex.subjects.PublishSubject
 
 class FeedWriteViewModel {
 
-    var toastSubjet = PublishSubject.create<String>()
+    var toastSubject = PublishSubject.create<String>()
+    var uploadCompleteSubject = PublishSubject.create<Unit>()
     var title = ObservableField("")
     var message = ObservableField("")
     var path = ""
 
-    private var compositeDisposable = CompositeDisposable()
+    var compositeDisposable = CompositeDisposable()
 
     fun destroy() {
         compositeDisposable.clear()
@@ -26,12 +27,12 @@ class FeedWriteViewModel {
     fun submit() {
         val title = title.get() ?: ""
         if (title.isEmpty()) {
-            toastSubjet.onNext("제목을 입력해주세요.")
+            toastSubject.onNext("제목을 입력해주세요.")
             return
         }
         val message = message.get() ?: ""
         if (message.isEmpty()) {
-            toastSubjet.onNext("내용을 입력해주세요.")
+            toastSubject.onNext("내용을 입력해주세요.")
             return
         }
 
@@ -42,13 +43,15 @@ class FeedWriteViewModel {
                 } else {
                     FireStorageHelper.upload(it)
                 }
-            }.map { Feed(0, "", title, message, it, null) }
-            .flatMapCompletable { FirestoreHelper.instance.insertFeed(it) }
+            }.map {
+                Feed(0, "", title, message, it, null)
+            }.flatMapCompletable { FirestoreHelper.instance.insertFeed(it) }
             .uiSubscribe({
-                //TODO
+                toastSubject.onNext("게시가 완료 되었습니다. :)")
+                uploadCompleteSubject.onNext(Unit)
             }, {
                 it.printStackTrace()
-                //TODO
+                toastSubject.onNext("잠시 후 다시 시도해주세요 :(")
             }).disposeBag(compositeDisposable)
     }
 

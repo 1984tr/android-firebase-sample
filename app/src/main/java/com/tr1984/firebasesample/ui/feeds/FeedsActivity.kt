@@ -1,5 +1,6 @@
 package com.tr1984.firebasesample.ui.feeds
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -20,16 +21,30 @@ class FeedsActivity : AppCompatActivity() {
         binding.viewModel = viewModel
         setContentView(binding.root)
 
-
-
-
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        binding.recyclerView.adapter = FeedsAdapter(viewModel.items)
-
+        setupUI()
+        
         viewModel.start()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            9111 -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    viewModel.refresh()
+                }
+            }
+            else -> {
+                super.onActivityResult(requestCode, resultCode, data)
+            }
+        }
+    }
+
     fun moveToWrite() {
-        startActivity(Intent(this, FeedWriteActivity::class.java))
+        startActivityForResult(Intent(this, FeedWriteActivity::class.java), 9111)
+    }
+
+    private fun setupUI() {
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.adapter = FeedsAdapter(viewModel.items)
     }
 }
