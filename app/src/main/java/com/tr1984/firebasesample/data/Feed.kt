@@ -1,3 +1,12 @@
 package com.tr1984.firebasesample.data
 
-data class Feed(val id: Int, val ownerUid: String, val title: String, val message: String?, val imageUrl: String?, val replies: List<Reply>?)
+import androidx.annotation.Keep
+
+@Keep
+data class Feed(
+    val ownerUid: String = "",
+    val title: String = "",
+    val message: String? = null,
+    val imageUrl: String? = null,
+    val replies: List<Reply>? = null
+)

@@ -49,7 +49,7 @@ class FeedWriteViewModel {
                     FireStorageHelper.upload(it)
                 }
             }.map {
-                Feed(0, uid, title, message, it, null)
+                Feed(uid, title, message, it, null)
             }.flatMapCompletable {
                 FirestoreHelper.instance.insertFeed(it)
             }.uiSubscribe({
