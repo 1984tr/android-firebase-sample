@@ -6,6 +6,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tr1984.firebasesample.databinding.ActivityFeedsBinding
+import com.tr1984.firebasesample.extensions.disposeBag
+import com.tr1984.firebasesample.extensions.uiSubscribeWithError
 
 class FeedsActivity : AppCompatActivity() {
 
@@ -22,6 +24,7 @@ class FeedsActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupUI()
+        subscribeViewModel()
 
         viewModel.start()
     }
@@ -46,5 +49,14 @@ class FeedsActivity : AppCompatActivity() {
     private fun setupUI() {
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = FeedsAdapter(viewModel.items)
+    }
+
+    private fun subscribeViewModel() {
+        viewModel.run {
+            updateSubject
+                .uiSubscribeWithError {
+                    binding.recyclerView.adapter?.notifyDataSetChanged()
+                }.disposeBag(compositeDisposable)
+        }
     }
 }

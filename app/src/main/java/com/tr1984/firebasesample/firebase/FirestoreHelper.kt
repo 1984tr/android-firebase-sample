@@ -92,22 +92,17 @@ class FirestoreHelper private constructor() {
         }
     }
 
-    fun getReplies(documentPath: String) : Single<List<Reply>> {
+    fun getReplies(documentPath: String): Single<List<Reply>> {
         return Single.create { emit ->
             firestore.collection("feeds")
                 .document(documentPath)
                 .collection("replies")
                 .get()
                 .addOnSuccessListener { result ->
-                    //FIXME
-                    val ll = result.documents.map {
-                        getReply(it)
-                    }
-
-
-                    val list = Observable.fromIterable(result.documents)
+                    emit.onSuccess(Observable.fromIterable(result.documents)
                         .flatMapSingle { getReply(it) }
                         .toList()
+                        .blockingGet())
                 }
                 .addOnFailureListener {
                     it.printStackTrace()
@@ -116,7 +111,7 @@ class FirestoreHelper private constructor() {
         }
     }
 
-    fun getReply(snapshot: DocumentSnapshot) : Single<Reply> {
+    fun getReply(snapshot: DocumentSnapshot): Single<Reply> {
         return Single.create { emit ->
             val reply = (snapshot.toObject(Reply::class.java) ?: Reply()).apply {
                 replies = arrayListOf()
