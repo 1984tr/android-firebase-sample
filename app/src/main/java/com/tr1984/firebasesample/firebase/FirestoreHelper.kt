@@ -116,13 +116,16 @@ class FirestoreHelper private constructor() {
     fun getReply(snapshot: DocumentSnapshot): Single<Reply> {
         return Single.create { emit ->
             val reply = (snapshot.toObject(Reply::class.java) ?: Reply()).apply {
+                id = snapshot.reference.id
                 replies = arrayListOf()
             }
             snapshot.reference.collection("child")
                 .get()
                 .addOnSuccessListener { result ->
                     reply.replies.addAll(result.documents.map {
-                        it.toObject(ReReply::class.java) ?: ReReply()
+                        (it.toObject(ReReply::class.java) ?: ReReply()).apply {
+                            id = it.reference.id
+                        }
                     })
                     emit.onSuccess(reply)
                 }
