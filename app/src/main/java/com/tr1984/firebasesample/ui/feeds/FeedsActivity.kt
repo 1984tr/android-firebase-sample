@@ -33,7 +33,7 @@ class FeedsActivity : AppCompatActivity() {
         when (requestCode) {
             9111 -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    viewModel.refresh()
+                    viewModel.start()
                 }
             }
             else -> {
@@ -49,6 +49,11 @@ class FeedsActivity : AppCompatActivity() {
     private fun setupUI() {
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = FeedsAdapter(viewModel.items)
+
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.start()
+            binding.swipeRefreshLayout.isRefreshing = false
+        }
     }
 
     private fun subscribeViewModel() {

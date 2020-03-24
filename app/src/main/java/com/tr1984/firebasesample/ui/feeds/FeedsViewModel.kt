@@ -43,10 +43,6 @@ class FeedsViewModel : ViewModel() {
             }).disposeBag(compositeDisposable)
     }
 
-    fun refresh() {
-        // TODO
-    }
-
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.clear()
