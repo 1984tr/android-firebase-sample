@@ -6,6 +6,7 @@ class FeedViewModel {
 
     var title = ObservableField("")
     var message = ObservableField("")
+    var replyCount = ObservableField("")
     var isOwner = ObservableField(false)
     var actionDelete: (() -> Unit)? = null
 }

@@ -29,6 +29,7 @@ class FeedsViewModel : ViewModel() {
                     items.add(FeedViewModel().apply {
                         title.set(feed.title)
                         message.set(feed.message)
+                        replyCount.set("댓글 ${feed.replies?.size ?: 0}")
                         isOwner.set(feed.ownerUid == myUid)
                         actionDelete = {
                             deleteFeed(feed.id)
