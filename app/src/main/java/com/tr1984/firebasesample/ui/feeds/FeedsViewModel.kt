@@ -31,7 +31,8 @@ class FeedsViewModel : ViewModel() {
                         message.set(feed.message)
                         isOwner.set(feed.ownerUid == myUid)
                         actionDelete = {
-                            
+                            deleteFeed(feed.id)
+                            items.remove(this)
                         }
                     })
                 }
@@ -49,5 +50,14 @@ class FeedsViewModel : ViewModel() {
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.clear()
+    }
+
+    private fun deleteFeed(path: String) {
+        FirestoreHelper.instance.deleteFeed(path)
+            .uiSubscribe({
+                updateSubject.onNext(Unit)
+            }, {
+                it.printStackTrace()
+            }).disposeBag(compositeDisposable)
     }
 }

@@ -60,7 +60,9 @@ class FirestoreHelper private constructor() {
                 .get()
                 .addOnSuccessListener { result ->
                     emit.onSuccess(result.documents.map {
-                        it.toObject(Feed::class.java) ?: Feed()
+                        (it.toObject(Feed::class.java) ?: Feed()).apply {
+                            id = it.reference.id
+                        }
                     })
                 }
                 .addOnFailureListener {

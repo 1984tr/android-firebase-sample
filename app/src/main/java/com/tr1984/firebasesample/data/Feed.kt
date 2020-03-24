@@ -4,7 +4,7 @@ import androidx.annotation.Keep
 
 @Keep
 data class Feed(
-    val path: String = "",
+    var id: String = "",
     val ownerUid: String = "",
     val title: String = "",
     val message: String? = null,
