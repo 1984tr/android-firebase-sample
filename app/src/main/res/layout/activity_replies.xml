@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="activity"
+            type="com.tr1984.firebasesample.ui.replies.RepliesActivity" />
+
+        <variable
+            name="viewModel"
+            type="com.tr1984.firebasesample.ui.replies.RepliesViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/lbl_title"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:gravity="center"
+            android:text="댓글"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:layout_width="56dp"
+            android:layout_height="0dp"
+            android:background="?attr/selectableItemBackground"
+            android:onClick="@{() -> activity.finish()}"
+            android:src="@drawable/ic_arrow_back"
+            app:layout_constraintBottom_toBottomOf="@id/lbl_title"
+            app:layout_constraintStart_toStartOf="@id/lbl_title"
+            app:layout_constraintTop_toTopOf="@id/lbl_title" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="#eeeeee"
+            app:layout_constraintEnd_toEndOf="@id/lbl_title"
+            app:layout_constraintStart_toStartOf="@id/lbl_title"
+            app:layout_constraintTop_toBottomOf="@id/lbl_title" />
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lbl_title">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

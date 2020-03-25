@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.tr1984.firebasesample.ui.replies.ReplyViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/horizontal_divider"
+            android:layout_width="16dp"
+            android:layout_height="1dp"
+            android:layout_marginLeft="16dp"
+            android:background="#3a3a3a"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/vertical_divider"
+            android:layout_width="1dp"
+            android:layout_height="16dp"
+            android:layout_marginLeft="16dp"
+            android:background="#3a3a3a"
+            app:layout_constraintBottom_toBottomOf="@id/horizontal_divider"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/reply"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="@{viewModel.reply}"
+            android:textColor="#3a3a3a"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@id/delete"
+            app:layout_constraintStart_toEndOf="@id/horizontal_divider"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="ReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReply" />
+
+        <ImageButton
+            android:id="@+id/delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
+            android:background="?attr/selectableItemBackground"
+            android:onClick="@{() -> viewModel.actionDelete.invoke()}"
+            android:src="@drawable/ic_delete_black"
+            app:layout_constraintBottom_toBottomOf="@id/reply"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/reply"
+            app:visibleIfTrue="@{viewModel.owner}" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:background="#eeeeee"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/reply" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
