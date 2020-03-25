@@ -7,7 +7,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tr1984.firebasesample.databinding.ActivityFeedsBinding
 import com.tr1984.firebasesample.extensions.disposeBag
+import com.tr1984.firebasesample.extensions.toast
 import com.tr1984.firebasesample.extensions.uiSubscribeWithError
+import com.tr1984.firebasesample.ui.replies.RepliesActivity
+import com.tr1984.firebasesample.ui.write.FeedWriteActivity
 
 class FeedsActivity : AppCompatActivity() {
 
@@ -58,9 +61,19 @@ class FeedsActivity : AppCompatActivity() {
 
     private fun subscribeViewModel() {
         viewModel.run {
+            toastSubject
+                .uiSubscribeWithError {
+                    toast(it)
+                }.disposeBag(compositeDisposable)
             updateSubject
                 .uiSubscribeWithError {
                     binding.recyclerView.adapter?.notifyDataSetChanged()
+                }.disposeBag(compositeDisposable)
+            showRepliesSubject
+                .uiSubscribeWithError { feed ->
+                    startActivity(Intent(this@FeedsActivity, RepliesActivity::class.java).apply {
+                        putExtra("feedId", feed.id)
+                    })
                 }.disposeBag(compositeDisposable)
         }
     }

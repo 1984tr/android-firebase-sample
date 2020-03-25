@@ -6,11 +6,11 @@
 
         <variable
             name="activity"
-            type="com.tr1984.firebasesample.ui.feeds.FeedWriteActivity" />
+            type="com.tr1984.firebasesample.ui.write.FeedWriteActivity" />
 
         <variable
             name="viewModel"
-            type="com.tr1984.firebasesample.ui.feeds.FeedWriteViewModel" />
+            type="com.tr1984.firebasesample.ui.write.FeedWriteViewModel" />
 
     </data>
 

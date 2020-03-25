@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tr1984.firebasesample.databinding.ActivityRepliesBinding
 import com.tr1984.firebasesample.extensions.disposeBag
+import com.tr1984.firebasesample.extensions.toast
 import com.tr1984.firebasesample.extensions.uiSubscribeWithError
 
 class RepliesActivity: AppCompatActivity() {
@@ -24,7 +25,7 @@ class RepliesActivity: AppCompatActivity() {
         setupUI()
         subscribeViewModel()
 
-        viewModel.start()
+        viewModel.start(intent.getStringExtra("feedId"))
     }
 
     private fun setupUI() {
@@ -40,6 +41,10 @@ class RepliesActivity: AppCompatActivity() {
 
     private fun subscribeViewModel() {
         viewModel.run {
+            toastSubject
+                .uiSubscribeWithError {
+                    toast(it)
+                }.disposeBag(compositeDisposable)
             updateSubject
                 .uiSubscribeWithError {
                     binding.recyclerView.adapter?.notifyDataSetChanged()

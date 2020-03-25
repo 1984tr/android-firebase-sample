@@ -1,4 +1,4 @@
-package com.tr1984.firebasesample.ui.feeds
+package com.tr1984.firebasesample.ui.write
 
 import androidx.databinding.ObservableField
 import com.tr1984.firebasesample.data.Feed

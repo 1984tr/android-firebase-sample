@@ -1,4 +1,4 @@
-package com.tr1984.firebasesample.ui.feeds
+package com.tr1984.firebasesample.ui.write
 
 import android.app.Activity
 import android.content.Intent

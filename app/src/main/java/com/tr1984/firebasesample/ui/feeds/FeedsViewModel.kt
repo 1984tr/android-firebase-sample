@@ -1,6 +1,7 @@
 package com.tr1984.firebasesample.ui.feeds
 
 import androidx.lifecycle.ViewModel
+import com.tr1984.firebasesample.data.Feed
 import com.tr1984.firebasesample.extensions.disposeBag
 import com.tr1984.firebasesample.extensions.uiSubscribe
 import com.tr1984.firebasesample.firebase.FirestoreHelper
@@ -10,10 +11,11 @@ import io.reactivex.subjects.PublishSubject
 
 class FeedsViewModel : ViewModel() {
 
-    var compositeDisposable = CompositeDisposable()
     var toastSubject = PublishSubject.create<String>()
-    var items = arrayListOf<FeedViewModel>()
     var updateSubject = PublishSubject.create<Unit>()
+    var showRepliesSubject = PublishSubject.create<Feed>()
+    var compositeDisposable = CompositeDisposable()
+    var items = arrayListOf<FeedViewModel>()
 
     private var myUid = ""
 
@@ -31,6 +33,9 @@ class FeedsViewModel : ViewModel() {
                         message.set(feed.message)
                         replyCount.set("댓글 ${feed.replies?.size ?: 0}")
                         isOwner.set(feed.ownerUid == myUid)
+                        actionClick = {
+                            showRepliesSubject.onNext(feed)
+                        }
                         actionDelete = {
                             deleteFeed(feed.id)
                             items.remove(this)

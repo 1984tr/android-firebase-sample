@@ -34,7 +34,12 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".ui.feeds.FeedWriteActivity"
+            android:name=".ui.write.FeedWriteActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" />
+
+        <activity
+            android:name=".ui.replies.RepliesActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
 

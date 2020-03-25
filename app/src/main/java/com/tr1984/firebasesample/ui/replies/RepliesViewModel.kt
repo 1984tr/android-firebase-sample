@@ -6,18 +6,21 @@ import io.reactivex.subjects.PublishSubject
 
 class RepliesViewModel {
 
-    var compositeDisposable = CompositeDisposable()
     var toastSubject = PublishSubject.create<String>()
-    var items = arrayListOf<ReplyViewModel>()
     var updateSubject = PublishSubject.create<Unit>()
+    var compositeDisposable = CompositeDisposable()
+    var items = arrayListOf<ReplyViewModel>()
 
     private var myUid = ""
-
+    private var feedId = ""
+    
     init {
         myUid = Preferences.getString(Preferences.Key.Uid) ?: ""
     }
 
-    fun start() {
-
+    fun start(feedId: String? = null) {
+        feedId?.let {
+            this.feedId = it
+        }
     }
 }
