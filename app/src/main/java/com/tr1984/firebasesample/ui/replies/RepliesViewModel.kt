@@ -13,7 +13,7 @@ class RepliesViewModel {
 
     private var myUid = ""
     private var feedId = ""
-    
+
     init {
         myUid = Preferences.getString(Preferences.Key.Uid) ?: ""
     }

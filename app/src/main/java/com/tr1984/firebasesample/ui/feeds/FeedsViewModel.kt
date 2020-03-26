@@ -31,7 +31,7 @@ class FeedsViewModel : ViewModel() {
                     items.add(FeedViewModel().apply {
                         title.set(feed.title)
                         message.set(feed.message)
-                        replyCount.set("댓글 ${feed.replies?.size ?: 0}")
+                        replyCount.set("댓글 ${feed.replyCount}")
                         isOwner.set(feed.ownerUid == myUid)
                         actionClick = {
                             showRepliesSubject.onNext(feed)

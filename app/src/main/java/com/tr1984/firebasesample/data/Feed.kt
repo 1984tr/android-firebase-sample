@@ -9,5 +9,6 @@ data class Feed(
     val title: String = "",
     val message: String? = null,
     val imageUrl: String? = null,
+    val replyCount: Int = 0,
     val replies: List<Reply>? = null
 )
