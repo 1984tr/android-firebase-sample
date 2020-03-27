@@ -28,6 +28,15 @@ class RepliesActivity: AppCompatActivity() {
         viewModel.start(intent.getStringExtra("feedId"))
     }
 
+    fun submit() {
+        val text = binding.writeReply.text.toString().trim()
+        if (text.isEmpty()) {
+            toast("댓글을 입력해주세요")
+        } else {
+            viewModel.submit(text)
+        }
+    }
+
     private fun setupUI() {
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter =

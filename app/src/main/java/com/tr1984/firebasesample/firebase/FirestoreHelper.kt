@@ -94,6 +94,60 @@ class FirestoreHelper private constructor() {
         }
     }
 
+    fun insertReply(feedPath: String, reply: Reply): Completable {
+        return Completable.fromCallable {
+            firestore.collection("feeds")
+                .document(feedPath)
+                .collection("replies")
+                .add(reply)
+                .addOnCompleteListener {
+                    it.isSuccessful
+                }
+        }
+    }
+
+    fun deleteReply(feedPath: String, replyPath: String): Completable {
+        return Completable.fromCallable {
+            firestore.collection("feeds")
+                .document(feedPath)
+                .collection("replies")
+                .document(replyPath)
+                .delete()
+                .addOnCompleteListener {
+                    it.isSuccessful
+                }
+        }
+    }
+
+    fun insertReReply(feedPath: String, replayPath: String, rereply: ReReply): Completable {
+        return Completable.fromCallable {
+            firestore.collection("feeds")
+                .document(feedPath)
+                .collection("replies")
+                .document(replayPath)
+                .collection("rereplies")
+                .add(rereply)
+                .addOnCompleteListener {
+                    it.isSuccessful
+                }
+        }
+    }
+
+    fun deleteReReply(feedPath: String, replyPath: String, rereplyPath: String): Completable {
+        return Completable.fromCallable {
+            firestore.collection("feeds")
+                .document(feedPath)
+                .collection("replies")
+                .document(replyPath)
+                .collection("rereplies")
+                .document(rereplyPath)
+                .delete()
+                .addOnCompleteListener {
+                    it.isSuccessful
+                }
+        }
+    }
+
     fun getReplies(documentPath: String): Single<List<Reply>> {
         return Single.create { emit ->
             firestore.collection("feeds")

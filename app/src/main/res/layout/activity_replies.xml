@@ -102,6 +102,7 @@
             android:textColor="#ffffff"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:onClick="@{() -> activity.submit()}"
             app:layout_constraintBottom_toBottomOf="@id/write_reply"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/write_reply" />
