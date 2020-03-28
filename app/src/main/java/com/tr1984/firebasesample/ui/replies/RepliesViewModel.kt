@@ -26,9 +26,11 @@ class RepliesViewModel {
         feedId?.let {
             this.feedId = it
             FirestoreHelper.instance.getReplies(it)
-                .uiSubscribe({
-                    items.addAll(it.map {
-                        ReplyViewModel()
+                .uiSubscribe({ replies ->
+                    items.addAll(replies.map { r ->
+                        ReplyViewModel().apply {
+                            reply = r.message
+                        }
                     })
                 }, {
                     it.printStackTrace()

@@ -148,23 +148,27 @@ class FirestoreHelper private constructor() {
         }
     }
 
-    fun getReplies(documentPath: String): Single<List<Reply>> {
+    fun getRepliess(documentPath: String): Single<List<DocumentSnapshot>> {
         return Single.create { emit ->
             firestore.collection("feeds")
                 .document(documentPath)
                 .collection("replies")
                 .get()
                 .addOnSuccessListener { result ->
-                    emit.onSuccess(Observable.fromIterable(result.documents)
-                        .flatMapSingle { getReply(it) }
-                        .toList()
-                        .blockingGet())
+                    emit.onSuccess(result.documents)
                 }
                 .addOnFailureListener {
                     it.printStackTrace()
                     emit.onError(it)
                 }
         }
+    }
+
+    fun getReplies(documentPath: String) : Single<List<Reply>> {
+        return getRepliess(documentPath)
+            .flatMapObservable { Observable.fromIterable(it) }
+            .flatMapSingle { getReply(it) }
+            .toList()
     }
 
     fun getReply(snapshot: DocumentSnapshot): Single<Reply> {
