@@ -2,6 +2,7 @@ package com.tr1984.firebasesample.firebase
 
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import com.tr1984.firebasesample.data.*
 import io.reactivex.Completable
@@ -57,6 +58,7 @@ class FirestoreHelper private constructor() {
     fun getFeeds(): Single<List<Feed>> {
         return Single.create { emit ->
             firestore.collection("feeds")
+                .orderBy("time", Query.Direction.DESCENDING)
                 .get()
                 .addOnSuccessListener { result ->
                     emit.onSuccess(result.documents.map {
@@ -153,6 +155,7 @@ class FirestoreHelper private constructor() {
             firestore.collection("feeds")
                 .document(documentPath)
                 .collection("replies")
+                .orderBy("time", Query.Direction.DESCENDING)
                 .get()
                 .addOnSuccessListener { result ->
                     emit.onSuccess(result.documents)
@@ -178,6 +181,7 @@ class FirestoreHelper private constructor() {
                 replies = arrayListOf()
             }
             snapshot.reference.collection("child")
+                .orderBy("time", Query.Direction.DESCENDING)
                 .get()
                 .addOnSuccessListener { result ->
                     reply.replies.addAll(result.documents.map {

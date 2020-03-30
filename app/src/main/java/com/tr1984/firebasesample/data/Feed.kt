@@ -1,6 +1,7 @@
 package com.tr1984.firebasesample.data
 
 import androidx.annotation.Keep
+import java.util.*
 
 @Keep
 data class Feed(
@@ -10,5 +11,6 @@ data class Feed(
     val message: String? = null,
     val imageUrl: String? = null,
     val replyCount: Int = 0,
-    val replies: List<Reply>? = null
+    val replies: List<Reply>? = null,
+    var time: Date = Date()
 )

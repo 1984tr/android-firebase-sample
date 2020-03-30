@@ -7,11 +7,13 @@ import com.tr1984.firebasesample.firebase.FirestoreHelper
 import com.tr1984.firebasesample.util.Preferences
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
+import java.util.*
 
 class RepliesViewModel {
 
     var toastSubject = PublishSubject.create<String>()
     var updateSubject = PublishSubject.create<Unit>()
+    var submitCompleteSubject = PublishSubject.create<Unit>()
     var compositeDisposable = CompositeDisposable()
     var items = arrayListOf<ReplyViewModel>()
 
@@ -25,13 +27,23 @@ class RepliesViewModel {
     fun start(feedId: String? = null) {
         feedId?.let {
             this.feedId = it
+            this.items.clear()
             FirestoreHelper.instance.getReplies(it)
                 .uiSubscribe({ replies ->
                     items.addAll(replies.map { r ->
                         ReplyViewModel().apply {
+                            isReReply = false
                             reply = r.message
+                            isOwner = myUid == r.ownerUid
+                            actionClick = {
+                                // TODO
+                            }
+                            actionDelete = {
+                                deleteReply(r.id)
+                            }
                         }
                     })
+                    updateSubject.onNext(Unit)
                 }, {
                     it.printStackTrace()
                     toastSubject.onNext("잠시 후 다시 시도해주세요 :(")
@@ -43,11 +55,23 @@ class RepliesViewModel {
         FirestoreHelper.instance.insertReply(feedId, Reply().apply {
             ownerUid = myUid
             message = text
+            time = Date(System.currentTimeMillis())
         }).uiSubscribe({
-            updateSubject.onNext(Unit)
+            submitCompleteSubject.onNext(Unit)
+            start(feedId)
         }, {
             it.printStackTrace()
             toastSubject.onNext("잠시 후 다시 시도해주세요 :(")
         }).disposeBag(compositeDisposable)
+    }
+
+    fun deleteReply(replyPath: String) {
+        FirestoreHelper.instance.deleteReply(feedId, replyPath)
+            .uiSubscribe({
+                start(feedId)
+            }, {
+                it.printStackTrace()
+                toastSubject.onNext("잠시 후 다시 시도해주세요 :(")
+            }).disposeBag(compositeDisposable)
     }
 }

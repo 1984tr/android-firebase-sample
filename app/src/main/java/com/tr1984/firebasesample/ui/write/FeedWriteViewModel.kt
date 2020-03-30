@@ -10,6 +10,7 @@ import com.tr1984.firebasesample.util.Preferences
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
+import java.util.*
 
 class FeedWriteViewModel {
 
@@ -55,7 +56,8 @@ class FeedWriteViewModel {
                     message = message,
                     imageUrl = it,
                     replyCount = 0,
-                    replies = null
+                    replies = null,
+                    time = Date(System.currentTimeMillis())
                 )
             }.flatMapCompletable {
                 FirestoreHelper.instance.insertFeed(it)

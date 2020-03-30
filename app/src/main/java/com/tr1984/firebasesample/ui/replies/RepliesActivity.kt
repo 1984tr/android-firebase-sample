@@ -58,6 +58,10 @@ class RepliesActivity: AppCompatActivity() {
                 .uiSubscribeWithError {
                     binding.recyclerView.adapter?.notifyDataSetChanged()
                 }.disposeBag(compositeDisposable)
+            submitCompleteSubject
+                .uiSubscribeWithError {
+                    binding.writeReply.setText("")
+                }.disposeBag(compositeDisposable)
         }
     }
 }
