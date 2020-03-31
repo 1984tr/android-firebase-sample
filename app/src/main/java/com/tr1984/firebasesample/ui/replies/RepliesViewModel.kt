@@ -32,25 +32,38 @@ class RepliesViewModel {
             this.items.clear()
             FirestoreHelper.instance.getReplies(it)
                 .uiSubscribe({ replies ->
-                    items.addAll(replies.map { r ->
-                        ReplyViewModel().apply {
-                            isReReply = false
-                            reply = r.message
-                            isOwner = myUid == r.ownerUid
-                            actionClick = {
+                    replies.forEach { reply ->
+                        val replyVM = ReplyViewModel().apply {
+                            this.isReReply = false
+                            this.reply = reply.message
+                            this.isOwner = myUid == reply.ownerUid
+                            this.actionClick = {
                                 rereplyPopupSubject.onNext { text ->
-                                    insertReReply(r.id, ReReply().apply {
+                                    insertReReply(reply.id, ReReply().apply {
                                         ownerUid = myUid
                                         message = text
                                         time = Date(System.currentTimeMillis())
                                     })
                                 }
                             }
-                            actionDelete = {
-                                deleteReply(r.id)
+                            this.actionDelete = {
+                                deleteReply(reply.id)
                             }
                         }
-                    })
+                        items.add(replyVM)
+
+                        reply.replies.forEach { rereply ->
+                            val rereplyVM = ReplyViewModel().apply {
+                                this.isReReply = true
+                                this.reply = rereply.message
+                                this.isOwner = myUid == rereply.ownerUid
+                                this.actionDelete = {
+                                    deleteReReply(reply.id, rereply.id)
+                                }
+                            }
+                            items.add(rereplyVM)
+                        }
+                    }
                     updateSubject.onNext(Unit)
                 }, {
                     it.printStackTrace()
@@ -85,6 +98,16 @@ class RepliesViewModel {
 
     fun insertReReply(replyPath: String, rereply: ReReply) {
         FirestoreHelper.instance.insertReReply(feedId, replyPath, rereply)
+            .uiSubscribe({
+                start(feedId)
+            }, {
+                it.printStackTrace()
+                toastSubject.onNext("잠시 후 다시 시도해주세요 :(")
+            }).disposeBag(compositeDisposable)
+    }
+
+    fun deleteReReply(replyPath: String, rereplyPath: String) {
+        FirestoreHelper.instance.deleteReReply(feedId, replyPath, rereplyPath)
             .uiSubscribe({
                 start(feedId)
             }, {

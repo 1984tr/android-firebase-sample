@@ -14,9 +14,12 @@ class ReReplyPopup(val activity: Activity, val submitCallback: (String) -> Unit)
     private var binding = PopupRereplyBinding.inflate(layoutInflater)
 
     init {
-        window?.setBackgroundDrawable(ColorDrawable(Color.argb(180, 0, 0, 0)))
-        window?.attributes?.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
-
+        window?.run {
+            setBackgroundDrawable(ColorDrawable(Color.argb(180, 0, 0, 0)))
+            val param = attributes
+            param.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+            attributes = param
+        }
         setContentView(binding.root)
         binding.popup = this
     }

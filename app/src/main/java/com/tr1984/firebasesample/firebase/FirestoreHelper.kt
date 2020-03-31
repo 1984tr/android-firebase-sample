@@ -150,8 +150,8 @@ class FirestoreHelper private constructor() {
         }
     }
 
-    fun getRepliess(documentPath: String): Single<List<DocumentSnapshot>> {
-        return Single.create { emit ->
+    fun getReplies(documentPath: String): Single<List<Reply>> {
+        return Single.create<List<DocumentSnapshot>> { emit ->
             firestore.collection("feeds")
                 .document(documentPath)
                 .collection("replies")
@@ -164,14 +164,11 @@ class FirestoreHelper private constructor() {
                     it.printStackTrace()
                     emit.onError(it)
                 }
-        }
-    }
-
-    fun getReplies(documentPath: String) : Single<List<Reply>> {
-        return getRepliess(documentPath)
-            .flatMapObservable { Observable.fromIterable(it) }
-            .flatMapSingle { getReply(it) }
-            .toList()
+        }.flatMapObservable {
+            Observable.fromIterable(it)
+        }.flatMapSingle {
+            getReply(it)
+        }.toList()
     }
 
     fun getReply(snapshot: DocumentSnapshot): Single<Reply> {
@@ -180,7 +177,7 @@ class FirestoreHelper private constructor() {
                 id = snapshot.reference.id
                 replies = arrayListOf()
             }
-            snapshot.reference.collection("child")
+            snapshot.reference.collection("rereplies")
                 .orderBy("time", Query.Direction.DESCENDING)
                 .get()
                 .addOnSuccessListener { result ->
