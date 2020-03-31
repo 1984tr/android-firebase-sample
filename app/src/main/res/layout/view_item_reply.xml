@@ -20,7 +20,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
-            android:onClick="@{() -> viewModel.actionClick}"
+            android:onClick="@{() -> viewModel.actionClick.invoke()}"
             android:padding="16dp"
             android:text="@{viewModel.reply}"
             android:textColor="#3a3a3a"

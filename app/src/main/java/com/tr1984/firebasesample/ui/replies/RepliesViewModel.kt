@@ -1,5 +1,6 @@
 package com.tr1984.firebasesample.ui.replies
 
+import com.tr1984.firebasesample.data.ReReply
 import com.tr1984.firebasesample.data.Reply
 import com.tr1984.firebasesample.extensions.disposeBag
 import com.tr1984.firebasesample.extensions.uiSubscribe
@@ -13,6 +14,7 @@ class RepliesViewModel {
 
     var toastSubject = PublishSubject.create<String>()
     var updateSubject = PublishSubject.create<Unit>()
+    var rereplyPopupSubject = PublishSubject.create<((String) -> Unit)>()
     var submitCompleteSubject = PublishSubject.create<Unit>()
     var compositeDisposable = CompositeDisposable()
     var items = arrayListOf<ReplyViewModel>()
@@ -36,7 +38,13 @@ class RepliesViewModel {
                             reply = r.message
                             isOwner = myUid == r.ownerUid
                             actionClick = {
-                                // TODO
+                                rereplyPopupSubject.onNext { text ->
+                                    insertReReply(r.id, ReReply().apply {
+                                        ownerUid = myUid
+                                        message = text
+                                        time = Date(System.currentTimeMillis())
+                                    })
+                                }
                             }
                             actionDelete = {
                                 deleteReply(r.id)
@@ -67,6 +75,16 @@ class RepliesViewModel {
 
     fun deleteReply(replyPath: String) {
         FirestoreHelper.instance.deleteReply(feedId, replyPath)
+            .uiSubscribe({
+                start(feedId)
+            }, {
+                it.printStackTrace()
+                toastSubject.onNext("잠시 후 다시 시도해주세요 :(")
+            }).disposeBag(compositeDisposable)
+    }
+
+    fun insertReReply(replyPath: String, rereply: ReReply) {
+        FirestoreHelper.instance.insertReReply(feedId, replyPath, rereply)
             .uiSubscribe({
                 start(feedId)
             }, {

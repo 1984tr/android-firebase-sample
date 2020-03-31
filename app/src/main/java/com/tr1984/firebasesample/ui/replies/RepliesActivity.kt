@@ -7,6 +7,7 @@ import com.tr1984.firebasesample.databinding.ActivityRepliesBinding
 import com.tr1984.firebasesample.extensions.disposeBag
 import com.tr1984.firebasesample.extensions.toast
 import com.tr1984.firebasesample.extensions.uiSubscribeWithError
+import com.tr1984.firebasesample.ui.dialogs.ReReplyPopup
 
 class RepliesActivity: AppCompatActivity() {
 
@@ -61,6 +62,10 @@ class RepliesActivity: AppCompatActivity() {
             submitCompleteSubject
                 .uiSubscribeWithError {
                     binding.writeReply.setText("")
+                }.disposeBag(compositeDisposable)
+            rereplyPopupSubject
+                .uiSubscribeWithError {
+                    ReReplyPopup(this@RepliesActivity, it).show()
                 }.disposeBag(compositeDisposable)
         }
     }
