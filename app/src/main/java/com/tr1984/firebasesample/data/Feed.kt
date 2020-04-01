@@ -5,7 +5,7 @@ import java.util.*
 
 @Keep
 data class Feed(
-    var id: String = "",
+    var documentPath: String = "",
     val ownerUid: String = "",
     val title: String = "",
     val message: String? = null,

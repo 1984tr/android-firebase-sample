@@ -37,7 +37,7 @@ class FeedsViewModel : ViewModel() {
                             showRepliesSubject.onNext(feed)
                         }
                         actionDelete = {
-                            deleteFeed(feed.id)
+                            deleteFeed(feed.documentPath)
                             items.remove(this)
                         }
                     })

@@ -26,26 +26,19 @@ class RepliesActivity: AppCompatActivity() {
         setupUI()
         subscribeViewModel()
 
-        viewModel.start(intent.getStringExtra("feedId"))
-    }
-
-    fun submit() {
-        val text = binding.writeReply.text.toString().trim()
-        if (text.isEmpty()) {
-            toast("댓글을 입력해주세요")
-        } else {
-            viewModel.submit(text)
-        }
+        viewModel.start(intent.getStringExtra("feedDocumentPath"))
     }
 
     private fun setupUI() {
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        binding.recyclerView.adapter =
-            RepliesAdapter(viewModel.items)
-
-        binding.swipeRefreshLayout.setOnRefreshListener {
-            viewModel.start()
-            binding.swipeRefreshLayout.isRefreshing = false
+        binding.recyclerView.run {
+            layoutManager = LinearLayoutManager(this@RepliesActivity)
+            adapter = RepliesAdapter(viewModel.items)
+        }
+        binding.swipeRefreshLayout.run {
+            setOnRefreshListener {
+                viewModel.start()
+                isRefreshing = false
+            }
         }
     }
 
@@ -59,11 +52,7 @@ class RepliesActivity: AppCompatActivity() {
                 .uiSubscribeWithError {
                     binding.recyclerView.adapter?.notifyDataSetChanged()
                 }.disposeBag(compositeDisposable)
-            submitCompleteSubject
-                .uiSubscribeWithError {
-                    binding.writeReply.setText("")
-                }.disposeBag(compositeDisposable)
-            rereplyPopupSubject
+            reReplyPopupSubject
                 .uiSubscribeWithError {
                     ReReplyPopup(this@RepliesActivity, it).show()
                 }.disposeBag(compositeDisposable)

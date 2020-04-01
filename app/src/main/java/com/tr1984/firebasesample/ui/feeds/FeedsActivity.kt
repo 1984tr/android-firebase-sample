@@ -72,7 +72,7 @@ class FeedsActivity : AppCompatActivity() {
             showRepliesSubject
                 .uiSubscribeWithError { feed ->
                     startActivity(Intent(this@FeedsActivity, RepliesActivity::class.java).apply {
-                        putExtra("feedId", feed.id)
+                        putExtra("feedDocumentPath", feed.documentPath)
                     })
                 }.disposeBag(compositeDisposable)
         }

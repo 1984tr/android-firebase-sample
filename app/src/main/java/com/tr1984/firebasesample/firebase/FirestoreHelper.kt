@@ -63,7 +63,7 @@ class FirestoreHelper private constructor() {
                 .addOnSuccessListener { result ->
                     emit.onSuccess(result.documents.map {
                         (it.toObject(Feed::class.java) ?: Feed()).apply {
-                            id = it.reference.id
+                            documentPath = it.reference.id
                         }
                     })
                 }
@@ -174,7 +174,7 @@ class FirestoreHelper private constructor() {
     fun getReply(snapshot: DocumentSnapshot): Single<Reply> {
         return Single.create { emit ->
             val reply = (snapshot.toObject(Reply::class.java) ?: Reply()).apply {
-                id = snapshot.reference.id
+                documentPath = snapshot.reference.id
                 replies = arrayListOf()
             }
             snapshot.reference.collection("rereplies")
@@ -183,7 +183,7 @@ class FirestoreHelper private constructor() {
                 .addOnSuccessListener { result ->
                     reply.replies.addAll(result.documents.map {
                         (it.toObject(ReReply::class.java) ?: ReReply()).apply {
-                            id = it.reference.id
+                            documentPath = it.reference.id
                         }
                     })
                     emit.onSuccess(reply)

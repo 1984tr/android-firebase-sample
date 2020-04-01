@@ -5,7 +5,7 @@ import java.util.*
 
 @Keep
 data class Reply(
-    var id: String = "",
+    var documentPath: String = "",
     var ownerUid: String = "",
     var message: String = "",
     var replies: ArrayList<ReReply> = arrayListOf(),
