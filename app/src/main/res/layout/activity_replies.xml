@@ -55,12 +55,17 @@
             app:layout_constraintBottom_toTopOf="@id/bottom_divider"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lbl_title">
+            app:layout_constraintTop_toBottomOf="@id/lbl_title"
+            app:onRefreshListener="@{viewModel.refreshListener}"
+            app:refreshing="@{viewModel.refreshing}">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                app:adapter="@{viewModel.adapter}"
+                app:bindReplies="@{viewModel.items}"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

@@ -4,12 +4,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.databinding.ObservableArrayList
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.tr1984.firebasesample.R
 import com.tr1984.firebasesample.databinding.ViewItemReplyBinding
 import com.tr1984.firebasesample.databinding.ViewItemRereplyBinding
 
-class RepliesAdapter(private val items: List<ReplyViewModel>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class RepliesAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    private var items = ObservableArrayList<ReplyViewModel>()
+
+    fun bind(newItems: ObservableArrayList<ReplyViewModel>) {
+        val callback = DiffCallback(items, newItems)
+        val result = DiffUtil.calculateDiff(callback)
+
+        items.clear()
+        items.addAll(newItems)
+
+        result.dispatchUpdatesTo(this)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == TYPE_REREPLY) {
@@ -30,10 +44,16 @@ class RepliesAdapter(private val items: List<ReplyViewModel>) : RecyclerView.Ada
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is ReplyHolder -> {
-                holder.binding.viewModel = items[position]
+                holder.binding.run {
+                    viewModel = items[position]
+                    executePendingBindings()
+                }
             }
             is ReReplyHolder -> {
-                holder.binding.viewModel = items[position]
+                holder.binding.run {
+                    viewModel = items[position]
+                    executePendingBindings()
+                }
             }
         }
     }
@@ -58,6 +78,28 @@ class RepliesAdapter(private val items: List<ReplyViewModel>) : RecyclerView.Ada
     class ReReplyHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
         var binding: ViewItemRereplyBinding = DataBindingUtil.bind(view)!!
+    }
+
+    inner class DiffCallback(
+        private val oldList: List<ReplyViewModel>,
+        private val newList: List<ReplyViewModel>
+    ) : DiffUtil.Callback() {
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition].path == newList[newItemPosition].path
+        }
+
+        override fun getOldListSize(): Int {
+            return oldList.size
+        }
+
+        override fun getNewListSize(): Int {
+            return newList.size
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition] == newList[newItemPosition]
+        }
     }
 
     companion object {

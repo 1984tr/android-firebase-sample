@@ -1,6 +1,9 @@
 package com.tr1984.firebasesample.ui.replies
 
+import androidx.databinding.ObservableArrayList
+import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.tr1984.firebasesample.data.ReReply
 import com.tr1984.firebasesample.data.Reply
 import com.tr1984.firebasesample.extensions.disposeBag
@@ -14,10 +17,14 @@ import java.util.*
 class RepliesViewModel {
 
     var toastSubject = PublishSubject.create<String>()
-    var updateSubject = PublishSubject.create<Unit>()
     var reReplyPopupSubject = PublishSubject.create<((String) -> Unit)>()
     var compositeDisposable = CompositeDisposable()
-    var items = arrayListOf<ReplyViewModel>()
+    var refreshing = ObservableBoolean(false)
+    var refreshListener = SwipeRefreshLayout.OnRefreshListener {
+        start()
+    }
+    var items = ObservableArrayList<ReplyViewModel>()
+    var adapter = RepliesAdapter()
     var replyText = ObservableField("")
 
     private var myUid = ""
@@ -30,13 +37,14 @@ class RepliesViewModel {
     fun start(feedDocumentPath: String? = null) {
         feedDocumentPath ?: return
 
+        refreshing.set(true)
         this.feedDocumentPath = feedDocumentPath
         this.items.clear()
 
         FirestoreHelper.instance.getReplies(feedDocumentPath)
+            .doFinally { refreshing.set(false) }
             .uiSubscribe({ replies ->
                 applyReplies(replies)
-                updateSubject.onNext(Unit)
             }, {
                 it.printStackTrace()
                 toastSubject.onNext("잠시 후 다시 시도해주세요 :(")
@@ -59,6 +67,7 @@ class RepliesViewModel {
     private fun applyReplies(replies: List<Reply>) {
         replies.forEach { reply ->
             items.add(ReplyViewModel().apply {
+                this.path = reply.documentPath
                 this.isReReply = false
                 this.reply = reply.message
                 this.isOwner = myUid == reply.ownerUid
@@ -82,6 +91,7 @@ class RepliesViewModel {
     private fun applyReReplies(replyDocumentPath: String, reReplies: List<ReReply>) {
         reReplies.forEach { reReply ->
             items.add(ReplyViewModel().apply {
+                this.path = reReply.documentPath
                 this.isReReply = true
                 this.reply = reReply.message
                 this.isOwner = myUid == reReply.ownerUid

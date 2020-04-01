@@ -2,7 +2,6 @@ package com.tr1984.firebasesample.ui.replies
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.tr1984.firebasesample.databinding.ActivityRepliesBinding
 import com.tr1984.firebasesample.extensions.disposeBag
 import com.tr1984.firebasesample.extensions.toast
@@ -23,39 +22,21 @@ class RepliesActivity: AppCompatActivity() {
         binding.viewModel = viewModel
         setContentView(binding.root)
 
-        setupUI()
-        subscribeViewModel()
-
-        viewModel.start(intent.getStringExtra("feedDocumentPath"))
+        bindModel()
     }
 
-    private fun setupUI() {
-        binding.recyclerView.run {
-            layoutManager = LinearLayoutManager(this@RepliesActivity)
-            adapter = RepliesAdapter(viewModel.items)
-        }
-        binding.swipeRefreshLayout.run {
-            setOnRefreshListener {
-                viewModel.start()
-                isRefreshing = false
-            }
-        }
-    }
-
-    private fun subscribeViewModel() {
+    private fun bindModel() {
         viewModel.run {
             toastSubject
                 .uiSubscribeWithError {
                     toast(it)
                 }.disposeBag(compositeDisposable)
-            updateSubject
-                .uiSubscribeWithError {
-                    binding.recyclerView.adapter?.notifyDataSetChanged()
-                }.disposeBag(compositeDisposable)
             reReplyPopupSubject
                 .uiSubscribeWithError {
                     ReReplyPopup(this@RepliesActivity, it).show()
                 }.disposeBag(compositeDisposable)
+
+            start(intent.getStringExtra("feedDocumentPath"))
         }
     }
 }
