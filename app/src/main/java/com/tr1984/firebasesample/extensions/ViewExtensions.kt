@@ -5,6 +5,7 @@ import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.databinding.ObservableArrayList
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.tr1984.firebasesample.ui.replies.RepliesAdapter
 import com.tr1984.firebasesample.ui.replies.ReplyViewModel
 
@@ -24,8 +25,8 @@ fun RecyclerView.bindReplies(items: ObservableArrayList<ReplyViewModel>) {
     }
 }
 
-@BindingAdapter("loadImage")
-fun ImageView.load(url: String?) {
+@BindingAdapter("loadImageUrl")
+fun ImageView.loadImageUrl(url: String?) {
     if (url != null) {
         try {
             if (this.context == null) {

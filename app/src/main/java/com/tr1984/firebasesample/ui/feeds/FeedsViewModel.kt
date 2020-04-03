@@ -31,6 +31,9 @@ class FeedsViewModel : ViewModel() {
                     items.add(FeedViewModel().apply {
                         title.set(feed.title)
                         message.set(feed.message)
+                        feed.imageUrl?.let {
+                            imageUrl.set(it)
+                        }
                         replyCount.set("댓글 ${feed.replyCount}")
                         isOwner.set(feed.ownerUid == myUid)
                         actionClick = {

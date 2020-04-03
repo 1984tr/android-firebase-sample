@@ -6,6 +6,7 @@ class FeedViewModel {
 
     var title = ObservableField("")
     var message = ObservableField("")
+    var imageUrl = ObservableField("")
     var replyCount = ObservableField("")
     var isOwner = ObservableField(false)
     var actionClick: (() -> Unit)? = null

@@ -1,19 +1,22 @@
 package com.tr1984.firebasesample.ui.write
 
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.DocumentsContract
 import android.provider.MediaStore
-import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.tr1984.firebasesample.databinding.ActivityFeedWriteBinding
 import com.tr1984.firebasesample.extensions.disposeBag
 import com.tr1984.firebasesample.extensions.toast
 import com.tr1984.firebasesample.extensions.uiSubscribeWithError
-import com.tr1984.firebasesample.firebase.FireStorageHelper
 
 class FeedWriteActivity : AppCompatActivity() {
 
@@ -42,17 +45,15 @@ class FeedWriteActivity : AppCompatActivity() {
                     val img = BitmapFactory.decodeStream(inputStream)
                     inputStream.close()
                     binding.attachmentImage.setImageBitmap(img)
+                    binding.attachmentImage.visibility = View.VISIBLE
                     val path = getRealPathFromURI(it.data)
-                    Log.d("test", "path: $path")
-                    path?.run {
-                        FireStorageHelper.upload(this)
-                            .uiSubscribeWithError {
-                                Log.d("test", "complete: $it")
-                            }
+                    path?.let { p ->
+                        viewModel.path = p
                     }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
+                toast("잠시 후 다시 시도해주세요 :(")
             }
         }
     }
@@ -63,10 +64,40 @@ class FeedWriteActivity : AppCompatActivity() {
     }
 
     fun moveGallery() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                toast("저장 권한이 필요합니다.")
+            } else {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 9002)
+            }
+            return
+        }
+
         val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
             type = "image/*"
         }
         startActivityForResult(intent, 9001)
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        when (requestCode) {
+            9002 -> {
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+                        type = "image/*"
+                    }
+                    startActivityForResult(intent, 9001)
+                } else {
+                    toast("저장 권한이 필요합니다.")
+                }
+                return
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun getRealPathFromURI(contentUri: Uri): String? {
