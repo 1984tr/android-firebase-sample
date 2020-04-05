@@ -16,6 +16,7 @@ class FeedWriteViewModel {
 
     var toastSubject = PublishSubject.create<String>()
     var uploadCompleteSubject = PublishSubject.create<Unit>()
+    var progressSubject = PublishSubject.create<Boolean>()
     var title = ObservableField("")
     var message = ObservableField("")
     var path = ""
@@ -27,6 +28,8 @@ class FeedWriteViewModel {
     }
 
     fun submit() {
+        progressSubject.onNext(true)
+
         val title = title.get() ?: ""
         if (title.isEmpty()) {
             toastSubject.onNext("제목을 입력해주세요.")
@@ -61,6 +64,8 @@ class FeedWriteViewModel {
                 )
             }.flatMapCompletable {
                 FirestoreHelper.instance.insertFeed(it)
+            }.doFinally {
+                progressSubject.onNext(false)
             }.uiSubscribe({
                 toastSubject.onNext("게시가 완료 되었습니다. :)")
                 uploadCompleteSubject.onNext(Unit)

@@ -38,10 +38,14 @@ object FireStorageHelper {
                 // ...
             }.addOnCompleteListener {
                 if (it.isSuccessful) {
-                    val downloadUri = it.result
+                    val downloadUri = it.result?.storage?.downloadUrl?.result?.toString() ?: ""
                     Log.d("Test", "downloadUri: $downloadUri")
+                    emit.onSuccess(downloadUri)
                 } else {
                     Log.d("Test", "error: ${it.exception?.message}")
+                    it.exception?.let { error ->
+                        emit.onError(error)
+                    }
                 }
             }
         }

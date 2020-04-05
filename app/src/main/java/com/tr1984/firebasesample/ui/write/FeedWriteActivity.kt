@@ -63,22 +63,6 @@ class FeedWriteActivity : AppCompatActivity() {
         viewModel.destroy()
     }
 
-    fun moveGallery() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                toast("저장 권한이 필요합니다.")
-            } else {
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 9002)
-            }
-            return
-        }
-
-        val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
-            type = "image/*"
-        }
-        startActivityForResult(intent, 9001)
-    }
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -98,6 +82,39 @@ class FeedWriteActivity : AppCompatActivity() {
             }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    fun moveGallery() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                toast("저장 권한이 필요합니다.")
+            } else {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 9002)
+            }
+            return
+        }
+
+        val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
+            type = "image/*"
+        }
+        startActivityForResult(intent, 9001)
+    }
+
+    private fun subscribeViewModel() {
+        viewModel.run {
+            toastSubject.uiSubscribeWithError {
+                this@FeedWriteActivity.toast(it)
+            }.disposeBag(compositeDisposable)
+
+            uploadCompleteSubject.uiSubscribeWithError {
+                setResult(Activity.RESULT_OK)
+                finish()
+            }.disposeBag(compositeDisposable)
+
+            progressSubject.uiSubscribeWithError {
+                binding.viewProgress.visibility = if (it) View.VISIBLE else View.GONE
+            }.disposeBag(compositeDisposable)
+        }
     }
 
     private fun getRealPathFromURI(contentUri: Uri): String? {
@@ -123,18 +140,5 @@ class FeedWriteActivity : AppCompatActivity() {
             cursor.close()
         }
         return null
-    }
-
-    private fun subscribeViewModel() {
-        viewModel.run {
-            toastSubject.uiSubscribeWithError {
-                this@FeedWriteActivity.toast(it)
-            }.disposeBag(compositeDisposable)
-
-            uploadCompleteSubject.uiSubscribeWithError {
-                setResult(Activity.RESULT_OK)
-                finish()
-            }.disposeBag(compositeDisposable)
-        }
     }
 }
