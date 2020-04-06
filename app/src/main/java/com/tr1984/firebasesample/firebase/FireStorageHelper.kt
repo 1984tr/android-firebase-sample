@@ -23,7 +23,8 @@ object FireStorageHelper {
                 .setContentType("image/${f.extension}")
                 .build()
 
-            val uploadTask = ref.child("feeds/${file.lastPathSegment}").putFile(file, metadata)
+            val storageRef = ref.child("feeds/${file.lastPathSegment}")
+            val uploadTask = storageRef.putFile(file, metadata)
 
             // Listen for state changes, errors, and completion of the upload.
             uploadTask.addOnProgressListener { taskSnapshot ->
@@ -31,21 +32,23 @@ object FireStorageHelper {
                 Log.d("Test", "Upload is $progress% done")
             }.addOnPausedListener {
                 Log.d("Test", "Upload is paused")
-            }.addOnFailureListener {
-                // Handle unsuccessful uploads
-            }.addOnSuccessListener { task ->
-                // Handle successful uploads on complete
-                // ...
-            }.addOnCompleteListener {
-                if (it.isSuccessful) {
-                    val downloadUri = it.result?.storage?.downloadUrl?.result?.toString() ?: ""
-                    Log.d("Test", "downloadUri: $downloadUri")
-                    emit.onSuccess(downloadUri)
+            }.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    storageRef.downloadUrl
+                        .addOnCompleteListener { uri ->
+                            if (uri.isSuccessful) {
+                                emit.onSuccess(uri.result?.toString() ?: "")
+                            } else {
+                                uri.exception?.let { error ->
+                                    emit.onError(error)
+                                } ?: emit.onError(Exception("Failed to get download uri."))
+                            }
+                        }
                 } else {
-                    Log.d("Test", "error: ${it.exception?.message}")
-                    it.exception?.let { error ->
+                    Log.d("Test", "error: ${task.exception?.message}")
+                    task.exception?.let { error ->
                         emit.onError(error)
-                    }
+                    } ?: emit.onError(Exception("Failed to put file."))
                 }
             }
         }
