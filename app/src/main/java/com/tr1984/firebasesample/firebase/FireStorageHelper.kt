@@ -4,18 +4,24 @@ import android.net.Uri
 import android.util.Log
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageMetadata
+import com.google.firebase.storage.StorageReference
 import io.reactivex.Single
 import java.io.File
 
 object FireStorageHelper {
 
-    private val storge by lazy {
+    private val storage by lazy {
         FirebaseStorage.getInstance("gs://fir-sample-aaf9e.appspot.com/")
     }
 
     fun upload(path: String): Single<String> {
-        return Single.create<String> { emit ->
-            val ref = storge.reference
+        return putFile(path)
+            .flatMap { getDownloadUrl(it) }
+    }
+
+    private fun putFile(path: String): Single<StorageReference> {
+        return Single.create<StorageReference> { emit ->
+            val ref = storage.reference
             val f = File(path)
             val file = Uri.fromFile(f)
 
@@ -26,24 +32,9 @@ object FireStorageHelper {
             val storageRef = ref.child("feeds/${file.lastPathSegment}")
             val uploadTask = storageRef.putFile(file, metadata)
 
-            // Listen for state changes, errors, and completion of the upload.
-            uploadTask.addOnProgressListener { taskSnapshot ->
-                val progress = (100.0 * taskSnapshot.bytesTransferred) / taskSnapshot.totalByteCount
-                Log.d("Test", "Upload is $progress% done")
-            }.addOnPausedListener {
-                Log.d("Test", "Upload is paused")
-            }.addOnCompleteListener { task ->
+            uploadTask.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    storageRef.downloadUrl
-                        .addOnCompleteListener { uri ->
-                            if (uri.isSuccessful) {
-                                emit.onSuccess(uri.result?.toString() ?: "")
-                            } else {
-                                uri.exception?.let { error ->
-                                    emit.onError(error)
-                                } ?: emit.onError(Exception("Failed to get download uri."))
-                            }
-                        }
+                    emit.onSuccess(storageRef)
                 } else {
                     Log.d("Test", "error: ${task.exception?.message}")
                     task.exception?.let { error ->
@@ -51,6 +42,21 @@ object FireStorageHelper {
                     } ?: emit.onError(Exception("Failed to put file."))
                 }
             }
+        }
+    }
+
+    private fun getDownloadUrl(storageRef: StorageReference): Single<String> {
+        return Single.create<String> { emit ->
+            storageRef.downloadUrl
+                .addOnCompleteListener { uri ->
+                    if (uri.isSuccessful) {
+                        emit.onSuccess(uri.result?.toString() ?: "")
+                    } else {
+                        uri.exception?.let { error ->
+                            emit.onError(error)
+                        } ?: emit.onError(Exception("Failed to get download uri."))
+                    }
+                }
         }
     }
 }

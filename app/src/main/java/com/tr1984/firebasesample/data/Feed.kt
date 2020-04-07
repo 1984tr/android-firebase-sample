@@ -7,6 +7,7 @@ import java.util.*
 data class Feed(
     var documentPath: String = "",
     val ownerUid: String = "",
+    var status: Int = 0,
     val title: String = "",
     val message: String? = null,
     val imageUrl: String? = null,

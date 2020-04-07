@@ -55,6 +55,7 @@ class FeedWriteViewModel {
             }.map {
                 Feed(
                     ownerUid = uid,
+                    status = 0,
                     title = title,
                     message = message,
                     imageUrl = it,

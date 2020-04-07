@@ -46,21 +46,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Title" />
 
-            <TextView
-                android:id="@+id/delete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground"
-                android:onClick="@{() -> viewModel.actionDelete.invoke()}"
-                android:padding="16dp"
-                android:text="삭제"
-                android:textColor="#3a3a3a"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="@id/title"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/title"
-                app:visibleIfTrue="@{viewModel.isOwner()}" />
-
             <ImageView
                 android:id="@+id/divider"
                 android:layout_width="0dp"
@@ -123,6 +108,21 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <TextView
+                android:id="@+id/delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:onClick="@{() -> viewModel.actionDelete.invoke()}"
+                android:padding="16dp"
+                android:text="삭제"
+                android:textColor="#3a3a3a"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@id/title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/title"
+                app:visibleIfTrue="@{viewModel.isOwner()}" />
+            
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

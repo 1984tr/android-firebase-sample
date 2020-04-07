@@ -57,8 +57,8 @@ class FeedsViewModel : ViewModel() {
         compositeDisposable.clear()
     }
 
-    private fun deleteFeed(path: String) {
-        FirestoreHelper.instance.deleteFeed(path)
+    private fun deleteFeed(documentPath: String) {
+        FirestoreHelper.instance.deleteFeed(documentPath)
             .uiSubscribe({
                 updateSubject.onNext(Unit)
             }, {

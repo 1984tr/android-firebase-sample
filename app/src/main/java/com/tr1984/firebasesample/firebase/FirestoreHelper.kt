@@ -58,6 +58,7 @@ class FirestoreHelper private constructor() {
     fun getFeeds(): Single<List<Feed>> {
         return Single.create { emit ->
             firestore.collection("feeds")
+                .whereEqualTo("status", 0)
                 .orderBy("time", Query.Direction.DESCENDING)
                 .get()
                 .addOnSuccessListener { result ->
@@ -89,7 +90,7 @@ class FirestoreHelper private constructor() {
         return Completable.fromCallable {
             firestore.collection("feeds")
                 .document(documentPath)
-                .delete()
+                .update("status", 1)
                 .addOnCompleteListener {
                     it.isSuccessful
                 }
