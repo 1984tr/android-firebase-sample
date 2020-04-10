@@ -50,8 +50,10 @@ class FeedsActivity : AppCompatActivity() {
     }
 
     private fun setupUI() {
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        binding.recyclerView.adapter = FeedsAdapter(viewModel.items)
+        binding.recyclerView.run {
+            layoutManager = LinearLayoutManager(this@FeedsActivity)
+            adapter = FeedsAdapter(viewModel.items)
+        }
 
         binding.swipeRefreshLayout.setOnRefreshListener {
             viewModel.start()
@@ -65,10 +67,12 @@ class FeedsActivity : AppCompatActivity() {
                 .uiSubscribeWithError {
                     toast(it)
                 }.disposeBag(compositeDisposable)
+
             updateSubject
                 .uiSubscribeWithError {
                     binding.recyclerView.adapter?.notifyDataSetChanged()
                 }.disposeBag(compositeDisposable)
+
             showRepliesSubject
                 .uiSubscribeWithError { feed ->
                     startActivity(Intent(this@FeedsActivity, RepliesActivity::class.java).apply {
