@@ -27,24 +27,7 @@ class FeedsViewModel : ViewModel() {
         items.clear()
         FirestoreHelper.instance.getFeeds()
             .uiSubscribe({ list ->
-                list.forEach { feed ->
-                    items.add(FeedViewModel().apply {
-                        title.set(feed.title)
-                        message.set(feed.message)
-                        feed.imageUrl?.let {
-                            imageUrl.set(it)
-                        }
-                        replyCount.set("댓글 ${feed.replyCount}")
-                        isOwner.set(feed.ownerUid == myUid)
-                        actionClick = {
-                            showRepliesSubject.onNext(feed)
-                        }
-                        actionDelete = {
-                            deleteFeed(feed.documentPath)
-                            items.remove(this)
-                        }
-                    })
-                }
+                items.addAll(getFeedViewModels(list))
                 updateSubject.onNext(Unit)
             }, {
                 it.printStackTrace()
@@ -55,6 +38,27 @@ class FeedsViewModel : ViewModel() {
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.clear()
+    }
+
+    private fun getFeedViewModels(feeds: List<Feed>) : List<FeedViewModel> {
+        return feeds.map { feed ->
+            FeedViewModel().apply {
+                title.set(feed.title)
+                message.set(feed.message)
+                feed.imageUrl?.let {
+                    imageUrl.set(it)
+                }
+                replyCount.set("댓글 ${feed.replyCount}")
+                isOwner.set(feed.ownerUid == myUid)
+                actionClick = {
+                    showRepliesSubject.onNext(feed)
+                }
+                actionDelete = {
+                    deleteFeed(feed.documentPath)
+                    items.remove(this)
+                }
+            }
+        }
     }
 
     private fun deleteFeed(documentPath: String) {
