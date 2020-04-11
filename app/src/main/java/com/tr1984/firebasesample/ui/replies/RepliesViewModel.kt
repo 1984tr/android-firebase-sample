@@ -84,13 +84,14 @@ class RepliesViewModel {
                     deleteReply(reply.documentPath)
                 }
             })
-            applyReReplies(reply.documentPath, reply.replies)
+
+            items.addAll(getReReplies(reply.documentPath, reply.replies))
         }
     }
 
-    private fun applyReReplies(replyDocumentPath: String, reReplies: List<ReReply>) {
-        reReplies.forEach { reReply ->
-            items.add(ReplyViewModel().apply {
+    private fun getReReplies(replyDocumentPath: String, reReplies: List<ReReply>) : List<ReplyViewModel> {
+        return reReplies.map { reReply ->
+            ReplyViewModel().apply {
                 this.path = reReply.documentPath
                 this.isReReply = true
                 this.reply = reReply.message
@@ -98,7 +99,7 @@ class RepliesViewModel {
                 this.actionDelete = {
                     deleteReReply(replyDocumentPath, reReply.documentPath)
                 }
-            })
+            }
         }
     }
 
