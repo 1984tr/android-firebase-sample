@@ -8,7 +8,7 @@ data class Pois(val name: String? = "", val items: ArrayList<Poi> = arrayListOf<
 
     val paths by lazy {
         PathOverlay().apply {
-            width = 10
+            width = 20
             outlineWidth = 0
             color = Color.parseColor(if (items.isNotEmpty()) (items[0].color ?: "#ff0000") else "#ff0000")
             if (items.size > 1) {

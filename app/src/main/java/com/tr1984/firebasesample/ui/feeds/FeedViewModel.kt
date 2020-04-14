@@ -8,6 +8,7 @@ class FeedViewModel {
     var message = ObservableField("")
     var imageUrl = ObservableField("")
     var replyCount = ObservableField("")
+    var date = ObservableField("")
     var isOwner = ObservableField(false)
     var actionClick: (() -> Unit)? = null
     var actionDelete: (() -> Unit)? = null

@@ -21,7 +21,10 @@
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackground"
             android:onClick="@{() -> viewModel.actionClick.invoke()}"
-            android:padding="16dp"
+            android:paddingLeft="16dp"
+            android:paddingTop="8dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="8dp"
             android:text="@{viewModel.reply}"
             android:textColor="#3a3a3a"
             android:textSize="16sp"
@@ -29,6 +32,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="ReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReplyReply" />
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:paddingBottom="8dp"
+            android:text="@{viewModel.date}"
+            android:textColor="#9a9a9a"
+            android:textSize="10sp"
+            app:layout_constraintStart_toStartOf="@id/reply"
+            app:layout_constraintTop_toBottomOf="@id/reply"
+            tools:text="0101010" />
 
         <ImageButton
             android:id="@+id/delete"
@@ -38,7 +54,7 @@
             android:background="?attr/selectableItemBackground"
             android:onClick="@{() -> viewModel.actionDelete.invoke()}"
             android:src="@drawable/ic_delete_black"
-            app:layout_constraintBottom_toBottomOf="@id/reply"
+            app:layout_constraintBottom_toBottomOf="@id/date"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/reply"
             app:visibleIfTrue="@{viewModel.owner}" />
@@ -51,7 +67,7 @@
             android:background="#eeeeee"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/reply" />
+            app:layout_constraintTop_toBottomOf="@id/date" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

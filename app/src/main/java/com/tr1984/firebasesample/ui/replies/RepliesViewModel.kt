@@ -12,6 +12,7 @@ import com.tr1984.firebasesample.firebase.FirestoreHelper
 import com.tr1984.firebasesample.util.Preferences
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
+import java.text.SimpleDateFormat
 import java.util.*
 
 class RepliesViewModel {
@@ -70,6 +71,7 @@ class RepliesViewModel {
                 this.path = reply.documentPath
                 this.isReReply = false
                 this.reply = reply.message
+                this.date = SimpleDateFormat("MM.dd HH:mm:ss").format(reply.time)
                 this.isOwner = myUid == reply.ownerUid
                 this.actionClick = {
                     reReplyPopupSubject.onNext { text ->
@@ -95,6 +97,7 @@ class RepliesViewModel {
                 this.path = reReply.documentPath
                 this.isReReply = true
                 this.reply = reReply.message
+                this.date = SimpleDateFormat("MM.dd HH:mm:ss").format(reReply.time)
                 this.isOwner = myUid == reReply.ownerUid
                 this.actionDelete = {
                     deleteReReply(replyDocumentPath, reReply.documentPath)

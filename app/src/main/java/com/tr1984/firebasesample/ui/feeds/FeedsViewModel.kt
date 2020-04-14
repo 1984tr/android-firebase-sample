@@ -8,6 +8,7 @@ import com.tr1984.firebasesample.firebase.FirestoreHelper
 import com.tr1984.firebasesample.util.Preferences
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
+import java.text.SimpleDateFormat
 
 class FeedsViewModel : ViewModel() {
 
@@ -49,6 +50,7 @@ class FeedsViewModel : ViewModel() {
                     imageUrl.set(it)
                 }
                 replyCount.set("댓글 ${feed.replyCount}")
+                date.set(SimpleDateFormat("MM.dd HH:mm:ss").format(feed.time))
                 isOwner.set(feed.ownerUid == myUid)
                 actionClick = {
                     showRepliesSubject.onNext(feed)
