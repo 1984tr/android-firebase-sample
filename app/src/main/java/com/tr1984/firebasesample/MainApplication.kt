@@ -13,7 +13,7 @@ class MainApplication : Application() {
 
         AnalyticsHelper.instance.run {
             setup(this@MainApplication)
-            logEvent(AnalyticsHelper.Event.START_APPLICATION, AnalyticsHelper.Param.PARAM1 to "param1")
+            logEvent("start_application")
         }
     }
 }

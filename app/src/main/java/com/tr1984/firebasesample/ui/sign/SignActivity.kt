@@ -16,6 +16,8 @@ class SignActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AnalyticsHelper.instance.trackScreen(this)
+
         setContentView(R.layout.activity_sign)
 
         if (AuthenticationHelper.instance.isSigned()) {
@@ -48,6 +50,7 @@ class SignActivity : AppCompatActivity() {
     }
 
     private fun startMap() {
+        AnalyticsHelper.instance.logEvent("start_map")
         startActivity(Intent(this, MapsActivity::class.java))
         finish()
     }

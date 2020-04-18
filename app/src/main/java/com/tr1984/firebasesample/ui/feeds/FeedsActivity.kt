@@ -9,6 +9,7 @@ import com.tr1984.firebasesample.databinding.ActivityFeedsBinding
 import com.tr1984.firebasesample.extensions.disposeBag
 import com.tr1984.firebasesample.extensions.toast
 import com.tr1984.firebasesample.extensions.uiSubscribeWithError
+import com.tr1984.firebasesample.firebase.AnalyticsHelper
 import com.tr1984.firebasesample.ui.replies.RepliesActivity
 import com.tr1984.firebasesample.ui.write.FeedWriteActivity
 
@@ -19,6 +20,7 @@ class FeedsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AnalyticsHelper.instance.trackScreen(this)
 
         viewModel = FeedsViewModel()
         binding = ActivityFeedsBinding.inflate(layoutInflater)

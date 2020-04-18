@@ -78,11 +78,13 @@ class MapsActivity : AppCompatActivity() {
 
     fun showDrawer(v: View) {
         if (!binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            AnalyticsHelper.instance.logEvent("show_drawer")
             binding.drawerLayout.openDrawer(GravityCompat.START)
         }
     }
 
     fun share() {
+        AnalyticsHelper.instance.logEvent("click_menu", "menu" to "share")
         DynamicLinkHelper.getShortDynamicLink("https://github.com/1984tr") {
             it?.let { link ->
                 startActivity(Intent.createChooser(Intent(Intent.ACTION_SEND).apply {
@@ -94,14 +96,17 @@ class MapsActivity : AppCompatActivity() {
     }
 
     fun sendMailToContact() {
+        AnalyticsHelper.instance.logEvent("click_menu", "menu" to "mail")
         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("mailto:jollytris@gmail.com")))
     }
 
     fun startFeedActivity() {
+        AnalyticsHelper.instance.logEvent("click_menu", "menu" to "board")
         startActivity(Intent(this@MapsActivity, FeedsActivity::class.java))
     }
 
     fun moveToSource() {
+        AnalyticsHelper.instance.logEvent("click_menu", "menu" to "contact")
         val link =
             RemoteConfigHelper.instance.getString(RemoteConfigHelper.Key.DATA_SOURCE_LINK) ?: ""
         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(link)))

@@ -17,6 +17,7 @@ import com.tr1984.firebasesample.databinding.ActivityFeedWriteBinding
 import com.tr1984.firebasesample.extensions.disposeBag
 import com.tr1984.firebasesample.extensions.toast
 import com.tr1984.firebasesample.extensions.uiSubscribeWithError
+import com.tr1984.firebasesample.firebase.AnalyticsHelper
 
 class FeedWriteActivity : AppCompatActivity() {
 
@@ -25,6 +26,7 @@ class FeedWriteActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AnalyticsHelper.instance.trackScreen(this)
 
         viewModel = FeedWriteViewModel()
         binding = ActivityFeedWriteBinding.inflate(layoutInflater)

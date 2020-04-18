@@ -44,15 +44,6 @@ class AnalyticsHelper private constructor() {
         CrashlyticsHelper.log(name)
     }
 
-    object Event {
-        val START_APPLICATION = "start_application"
-        val CLICK_BTN_ANALYTICS = "click_btn_analytics"
-    }
-
-    object Param {
-        val PARAM1 = "param1"
-    }
-
     companion object {
 
         val instance = AnalyticsHelper()

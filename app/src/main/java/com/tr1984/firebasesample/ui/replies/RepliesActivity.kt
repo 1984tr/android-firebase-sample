@@ -6,6 +6,7 @@ import com.tr1984.firebasesample.databinding.ActivityRepliesBinding
 import com.tr1984.firebasesample.extensions.disposeBag
 import com.tr1984.firebasesample.extensions.toast
 import com.tr1984.firebasesample.extensions.uiSubscribeWithError
+import com.tr1984.firebasesample.firebase.AnalyticsHelper
 import com.tr1984.firebasesample.ui.dialogs.ReReplyPopup
 
 class RepliesActivity: AppCompatActivity() {
@@ -15,6 +16,7 @@ class RepliesActivity: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AnalyticsHelper.instance.trackScreen(this)
 
         viewModel = RepliesViewModel()
         binding = ActivityRepliesBinding.inflate(layoutInflater)
