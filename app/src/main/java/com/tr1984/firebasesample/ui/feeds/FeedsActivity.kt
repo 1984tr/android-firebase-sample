@@ -12,17 +12,19 @@ import com.tr1984.firebasesample.extensions.uiSubscribeWithError
 import com.tr1984.firebasesample.firebase.AnalyticsHelper
 import com.tr1984.firebasesample.ui.replies.RepliesActivity
 import com.tr1984.firebasesample.ui.write.FeedWriteActivity
+import io.reactivex.disposables.CompositeDisposable
 
 class FeedsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityFeedsBinding
     private lateinit var viewModel: FeedsViewModel
+    private val compositeDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AnalyticsHelper.instance.trackScreen(this)
 
-        viewModel = FeedsViewModel()
+        viewModel = FeedsViewModel(compositeDisposable)
         binding = ActivityFeedsBinding.inflate(layoutInflater)
         binding.activity = this
         binding.viewModel = viewModel
@@ -34,9 +36,14 @@ class FeedsActivity : AppCompatActivity() {
         viewModel.start()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.clear()
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
-            9111 -> {
+            RequestCodeToWrites -> {
                 if (resultCode == Activity.RESULT_OK) {
                     viewModel.start()
                 }
@@ -48,7 +55,7 @@ class FeedsActivity : AppCompatActivity() {
     }
 
     fun moveToWrite() {
-        startActivityForResult(Intent(this, FeedWriteActivity::class.java), 9111)
+        startActivityForResult(Intent(this, FeedWriteActivity::class.java), RequestCodeToWrites)
     }
 
     private fun setupUI() {
@@ -82,5 +89,9 @@ class FeedsActivity : AppCompatActivity() {
                     })
                 }.disposeBag(compositeDisposable)
         }
+    }
+
+    companion object {
+        const val RequestCodeToWrites = 9111
     }
 }

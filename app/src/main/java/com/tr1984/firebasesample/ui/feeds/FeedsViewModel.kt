@@ -1,6 +1,5 @@
 package com.tr1984.firebasesample.ui.feeds
 
-import androidx.lifecycle.ViewModel
 import com.tr1984.firebasesample.data.Feed
 import com.tr1984.firebasesample.extensions.disposeBag
 import com.tr1984.firebasesample.extensions.uiSubscribe
@@ -10,12 +9,11 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 import java.text.SimpleDateFormat
 
-class FeedsViewModel : ViewModel() {
+class FeedsViewModel(val compositeDisposable: CompositeDisposable) {
 
     var toastSubject = PublishSubject.create<String>()
     var updateSubject = PublishSubject.create<Unit>()
     var showRepliesSubject = PublishSubject.create<Feed>()
-    var compositeDisposable = CompositeDisposable()
     var items = arrayListOf<FeedViewModel>()
 
     private var myUid = ""
@@ -34,11 +32,6 @@ class FeedsViewModel : ViewModel() {
                 it.printStackTrace()
                 toastSubject.onNext("잠시 후 다시 시도해주세요 :(")
             }).disposeBag(compositeDisposable)
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        compositeDisposable.clear()
     }
 
     private fun getFeedViewModels(feeds: List<Feed>) : List<FeedViewModel> {

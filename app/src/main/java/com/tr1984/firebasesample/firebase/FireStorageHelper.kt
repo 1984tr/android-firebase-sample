@@ -10,8 +10,9 @@ import java.io.File
 
 object FireStorageHelper {
 
+    private val url = "gs://fir-sample-aaf9e.appspot.com/"
     private val storage by lazy {
-        FirebaseStorage.getInstance("gs://fir-sample-aaf9e.appspot.com/")
+        FirebaseStorage.getInstance(url)
     }
 
     fun upload(path: String): Single<String> {

@@ -34,38 +34,24 @@ class MapsActivity : AppCompatActivity() {
     private lateinit var viewModel: MapsViewModel
     private var naverMap: NaverMap? = null
 
-    private var compositeDisposable = CompositeDisposable()
+    private val compositeDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AnalyticsHelper.instance.trackScreen(this)
 
-        viewModel = MapsViewModel()
+        viewModel = MapsViewModel(compositeDisposable)
         binding = ActivityMapsBinding.inflate(layoutInflater)
         binding.viewModel = viewModel
         setContentView(binding.root)
 
         subscribeViewModel()
-
-        Observable.combineLatest(
-            getMap(),
-            viewModel.getConfiguration(),
-            BiFunction<NaverMap, Unit, NaverMap> { map, _ ->
-                map
-            })
-            .uiSubscribe({
-                settingMap(it)
-                setupDrawer()
-                viewModel.start()
-            }, {
-                this@MapsActivity.alert("알림", it.localizedMessage)
-            }).disposeBag(compositeDisposable)
+        loadMapWithFetchConfiguration()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         compositeDisposable.clear()
-        viewModel.destroy()
     }
 
     override fun onBackPressed() {
@@ -172,6 +158,22 @@ class MapsActivity : AppCompatActivity() {
         val headerBinding = DrawerHeaderBinding.bind(binding.navView.getHeaderView(0))
         headerBinding.viewModel = viewModel
         headerBinding.activity = this
+    }
+
+    private fun loadMapWithFetchConfiguration() {
+        Observable.combineLatest(
+            getMap(),
+            viewModel.getConfiguration(),
+            BiFunction<NaverMap, Unit, NaverMap> { map, _ ->
+                map
+            })
+            .uiSubscribe({
+                settingMap(it)
+                setupDrawer()
+                viewModel.start()
+            }, {
+                this@MapsActivity.alert("알림", it.localizedMessage)
+            }).disposeBag(compositeDisposable)
     }
 
     private fun drawMarker(pois: Pois) {

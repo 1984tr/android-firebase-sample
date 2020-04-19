@@ -16,7 +16,7 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 
-class MapsViewModel {
+class MapsViewModel(val compositeDisposable: CompositeDisposable) {
 
     var shareSubject = PublishSubject.create<Uri>()
     var positionSubject = PublishSubject.create<LatLng>()
@@ -37,7 +37,6 @@ class MapsViewModel {
 
     var pois = listOf<Pois>()
 
-    private var compositeDisposable = CompositeDisposable()
     private var isExtendPois = false
         set(value) {
             field = value
@@ -50,10 +49,6 @@ class MapsViewModel {
                 }
             )
         }
-
-    fun destroy() {
-        compositeDisposable.clear()
-    }
 
     fun getConfiguration(): Observable<Unit> {
         return Observable.create<Unit> { emit ->

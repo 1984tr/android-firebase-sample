@@ -18,17 +18,19 @@ import com.tr1984.firebasesample.extensions.disposeBag
 import com.tr1984.firebasesample.extensions.toast
 import com.tr1984.firebasesample.extensions.uiSubscribeWithError
 import com.tr1984.firebasesample.firebase.AnalyticsHelper
+import io.reactivex.disposables.CompositeDisposable
 
 class FeedWriteActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityFeedWriteBinding
     private lateinit var viewModel: FeedWriteViewModel
+    private val compositeDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AnalyticsHelper.instance.trackScreen(this)
 
-        viewModel = FeedWriteViewModel()
+        viewModel = FeedWriteViewModel(compositeDisposable)
         binding = ActivityFeedWriteBinding.inflate(layoutInflater)
         binding.activity = this
         binding.viewModel = viewModel
@@ -37,18 +39,23 @@ class FeedWriteActivity : AppCompatActivity() {
         subscribeViewModel()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.clear()
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == 9001 && resultCode == Activity.RESULT_OK) {
+        if (requestCode == RequestCodeToGallery && resultCode == Activity.RESULT_OK) {
             try {
-                data?.let {
-                    val inputStream = contentResolver.openInputStream(it.data)
+                data?.data?.let {
+                    val inputStream = contentResolver.openInputStream(it)
                     val img = BitmapFactory.decodeStream(inputStream)
-                    inputStream.close()
+                    inputStream?.close()
                     binding.attachmentImage.setImageBitmap(img)
                     binding.attachmentImage.visibility = View.VISIBLE
-                    val path = getRealPathFromURI(it.data)
+                    val path = getRealPathFromURI(it)
                     path?.let { p ->
                         viewModel.path = p
                     }
@@ -60,23 +67,18 @@ class FeedWriteActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        viewModel.destroy()
-    }
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
         when (requestCode) {
-            9002 -> {
+            RequestCodeToExternalStoragePermission -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
                         type = "image/*"
                     }
-                    startActivityForResult(intent, 9001)
+                    startActivityForResult(intent, RequestCodeToGallery)
                 } else {
                     toast("저장 권한이 필요합니다.")
                 }
@@ -91,7 +93,7 @@ class FeedWriteActivity : AppCompatActivity() {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 toast("저장 권한이 필요합니다.")
             } else {
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 9002)
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), RequestCodeToExternalStoragePermission)
             }
             return
         }
@@ -99,7 +101,7 @@ class FeedWriteActivity : AppCompatActivity() {
         val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
             type = "image/*"
         }
-        startActivityForResult(intent, 9001)
+        startActivityForResult(intent, RequestCodeToGallery)
     }
 
     private fun subscribeViewModel() {
@@ -142,5 +144,10 @@ class FeedWriteActivity : AppCompatActivity() {
             cursor.close()
         }
         return null
+    }
+
+    companion object {
+        const val RequestCodeToGallery = 9001
+        const val RequestCodeToExternalStoragePermission = 9002
     }
 }

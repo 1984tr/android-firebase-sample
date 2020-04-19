@@ -4,6 +4,7 @@ import androidx.databinding.ObservableField
 import com.tr1984.firebasesample.data.Feed
 import com.tr1984.firebasesample.extensions.disposeBag
 import com.tr1984.firebasesample.extensions.uiSubscribe
+import com.tr1984.firebasesample.firebase.AnalyticsHelper
 import com.tr1984.firebasesample.firebase.FireStorageHelper
 import com.tr1984.firebasesample.firebase.FirestoreHelper
 import com.tr1984.firebasesample.util.Preferences
@@ -12,7 +13,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 import java.util.*
 
-class FeedWriteViewModel {
+class FeedWriteViewModel(val compositeDisposable: CompositeDisposable) {
 
     var toastSubject = PublishSubject.create<String>()
     var uploadCompleteSubject = PublishSubject.create<Unit>()
@@ -20,12 +21,6 @@ class FeedWriteViewModel {
     var title = ObservableField("")
     var message = ObservableField("")
     var path = ""
-
-    var compositeDisposable = CompositeDisposable()
-
-    fun destroy() {
-        compositeDisposable.clear()
-    }
 
     fun submit() {
         progressSubject.onNext(true)
@@ -45,6 +40,9 @@ class FeedWriteViewModel {
             toastSubject.onNext("잠시 후 다시 시도해주세요 :(")
             return
         }
+
+        AnalyticsHelper.instance.logEvent("submit_feed", "title" to title, "message" to message, "uid" to uid)
+
         Single.just(path)
             .flatMap {
                 if (it.isEmpty()) {

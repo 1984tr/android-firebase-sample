@@ -15,11 +15,10 @@ import io.reactivex.subjects.PublishSubject
 import java.text.SimpleDateFormat
 import java.util.*
 
-class RepliesViewModel {
+class RepliesViewModel(val compositeDisposable: CompositeDisposable) {
 
     var toastSubject = PublishSubject.create<String>()
     var reReplyPopupSubject = PublishSubject.create<((String) -> Unit)>()
-    var compositeDisposable = CompositeDisposable()
     var refreshing = ObservableBoolean(false)
     var refreshListener = SwipeRefreshLayout.OnRefreshListener {
         start()
