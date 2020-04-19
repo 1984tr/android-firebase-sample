@@ -9,7 +9,7 @@ import com.tr1984.firebasesample.data.Pois
 import com.tr1984.firebasesample.extensions.disposeBag
 import com.tr1984.firebasesample.extensions.uiSubscribe
 import com.tr1984.firebasesample.firebase.FirestoreHelper
-import com.tr1984.firebasesample.firebase.MapFirebaseMessagingService
+import com.tr1984.firebasesample.firebase.FirebaseSampleMessagingService
 import com.tr1984.firebasesample.firebase.RemoteConfigHelper
 import com.tr1984.firebasesample.util.Logger
 import io.reactivex.Observable
@@ -92,7 +92,7 @@ class MapsViewModel(val compositeDisposable: CompositeDisposable) {
     }
 
     private fun checkFcmId() {
-        MapFirebaseMessagingService.getInstanceId {
+        FirebaseSampleMessagingService.getInstanceId {
             // TODO add realtimedb with auth
         }
     }

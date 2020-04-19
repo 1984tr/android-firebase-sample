@@ -6,7 +6,7 @@ import com.google.firebase.messaging.RemoteMessage
 import com.tr1984.firebasesample.util.Logger
 import com.tr1984.firebasesample.util.Preferences
 
-class MapFirebaseMessagingService : FirebaseMessagingService() {
+class FirebaseSampleMessagingService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
@@ -16,7 +16,7 @@ class MapFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
-        Logger.d("onMessageReceived - ${remoteMessage.toString()}")
+        Logger.d("onMessageReceived - $remoteMessage")
         remoteMessage.notification?.run {
 
         }

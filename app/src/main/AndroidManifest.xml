@@ -44,7 +44,7 @@
             android:windowSoftInputMode="stateHidden" />
 
         <service
-            android:name="com.tr1984.firebasesample.firebase.MapFirebaseMessagingService"
+            android:name="com.tr1984.firebasesample.firebase.FirebaseSampleMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
