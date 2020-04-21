@@ -22,11 +22,17 @@ android-firebase-sample
 > 맵에 노출하기 위한 Poi 정보들을 저장한다.   
 > 게시판 글, 댓글, 대댓글 정보들을 저장한다.   
 
-## Dynamic Link - DynamicLinkHelper : 공유용 (TODO)
+## Dynamic Link : DynamicLinkHelper.kt
+> 앱 정보를 공유하는데 사용한다.   
 
+## Remote Config : RemoteConfigHelper.kt
+> 버전 정보, 앱 타이틀, 연락처 정보 등 환경 설정 정보를 로드하는데 사용한다.   
 
-+ RealtimeDBHelper : FCM 토큰 키 (TODO)
-+ MapFirebaseMessagingService : 푸시 (TODO)
-+ RemoteConfigHelper : 기본 환결설정 데이터용 (TODO)
+## Cloud Functions : functions/index.js
+> 게시물에서 댓글이 작성 되었을 때 댓글 카운트를 업데이트 하는 용도로 사용한다.
+
+## Messaging Service : MapFirebaseMessagingService.kt
+> 푸시 토큰 발급
++ 
 + Cloud Functions : 댓글 카운드 (TODO)
 + 그리고 Map
