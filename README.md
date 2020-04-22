@@ -33,6 +33,5 @@ android-firebase-sample
 
 ## Messaging Service : MapFirebaseMessagingService.kt
 > 푸시 토큰 발급
-+ 
-+ Cloud Functions : 댓글 카운드 (TODO)
-+ 그리고 Map
+
+## And NaverMap
